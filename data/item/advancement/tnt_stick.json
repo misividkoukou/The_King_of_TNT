@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "consume": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "minecraft:stick",
+          "predicates": {
+            "minecraft:custom_data": "{tnt:true}"
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "item:tnt/throw_tnt"
+  }
+}

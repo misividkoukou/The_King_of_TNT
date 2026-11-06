@@ -1,0 +1,1 @@
+$title @a actionbar [{"text":"复位中·暂不可开始","color":"red"},{"text":"  │  剩余 ","color":"dark_gray"},{"text":"$(h)","color":"aqua"},{"text":" 层  重试 ","color":"dark_gray"},{"text":"$(retry)","color":"yellow"}]

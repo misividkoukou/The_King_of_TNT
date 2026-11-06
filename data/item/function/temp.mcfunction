@@ -1,0 +1,2 @@
+#tnt stick
+give @s minecraft:stick[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:1.5,cooldown_group:"tnt_throw"},minecraft:custom_data={tnt:true},minecraft:consumable={consume_seconds:0,animation:"none",sound:"intentionally_empty",has_consume_particles:false},minecraft:item_model="minecraft:tnt",minecraft:item_name={"text":"抛射型tnt"}] 1
