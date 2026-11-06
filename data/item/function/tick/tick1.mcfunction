@@ -1,1 +1,0 @@
-schedule function item:tick/tick1 1t replace
