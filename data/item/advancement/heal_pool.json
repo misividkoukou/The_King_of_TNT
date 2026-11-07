@@ -4,15 +4,15 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "items": "minecraft:stick",
+          "items": "minecraft:beacon",
           "predicates": {
-            "minecraft:custom_data": "{tnt:true}"
+            "minecraft:custom_data": "{heal_pool:true}"
           }
         }
       }
     }
   },
   "rewards": {
-    "function": "item:tnt/throw_tnt"
+    "function": "item:heal_pool/summon"
   }
 }

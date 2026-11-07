@@ -11,3 +11,4 @@
 effect give @a saturation 30 0 true
 effect give @a resistance 30 4 true
 effect give @a regeneration 30 2 true
+effect give @a night_vision 30 1 true

@@ -5,8 +5,11 @@
 tellraw @a [{"text":"[TKOT] ","color":"red"},{"text":"开局失败：没有检测到本局玩家，已中断并回到大厅。","color":"yellow"}]
 
 # 关掉所有本局相关的调度
-schedule clear tkot:states/1/tp
 schedule clear tkot:states/2/give_item
+# maps/pick 已经 forceload 过地图区块，abort 不走结算流程，必须在这里回收
+# （否则强加载区块会一直占着内存，而且已排队的开场铺图还会把地图放出来）
+schedule clear tkot:states/1/place_map
+execute if score #map_num int matches 1.. run forceload remove 0 -48 47 -1
 
 # 清状态
 effect clear @a
@@ -21,3 +24,5 @@ scoreboard players set #alive_player int 0
 scoreboard players set @a statu 0
 tag @a remove in_arena
 gamemode adventure @a
+# 开局失败也要把 PVP 关回大厅状态：这条路径不经过 states/3，否则会漏
+gamerule pvp false

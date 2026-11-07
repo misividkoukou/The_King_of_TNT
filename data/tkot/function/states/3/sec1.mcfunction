@@ -1,12 +1,7 @@
-# ── 状态 3 的进度提示（每秒）──
-# 这条 actionbar 同时是状态指示器：
-#   红色「复位中」 = 还不能开始
-#   数字往下走     = 复位正常进行
-#   数字卡住不动   = fill 清理卡住了（区块没加载 / #max_height 没变）
-
-# 兜底重传：结算那一刻正好在重生的玩家会错过 states/3/tp 的第一次传送，
-# 这里每秒补一次，保证所有人最终都在大厅。
-function tkot:lobby/tp_all
+# ── 状态 3 的兜底（每秒）──
+# 只把“不在大厅范围内”的人拉回来：
+# 原来是无条件 tp_all，玩家在结算这 1~2 秒里会被反复钉在传送点，动都动不了。
+execute as @a at @s unless entity @s[x=0,y=-64,z=200,dx=48,dy=64,dz=48] run function tkot:lobby/tp_point
 
 execute store result storage tkot:temp h int 1 run scoreboard players get #max_height int
 execute store result storage tkot:temp retry int 1 run scoreboard players get #reset_retry int

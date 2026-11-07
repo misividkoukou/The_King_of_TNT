@@ -1,0 +1,1 @@
+kill @e[type=armor_stand,tag=heal_pool,scores={int=5..}]

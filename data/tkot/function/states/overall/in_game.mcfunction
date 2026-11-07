@@ -6,11 +6,13 @@
 
 # 1. 非本局玩家（statu 0/1，含刚加入服务器的人）→ 局外观战
 #    开局第一 tick 就会执行，所以大厅里的人会被“扯”进场地
-execute as @a[scores={statu=0..1}] run scoreboard players set @s statu 4
+#    team=!debug：调试队不进这个流程，他们在 spread 里被送到 y_debug 观察点
+execute as @a[scores={statu=0..1},team=!debug] run scoreboard players set @s statu 4
 
-# 2. 按当前地图重算 in_arena，并把出界的观战者拉回观察点
-#    新增地图时，在这里加一行 dispatch（maps/mapN_spectate）
-execute if score #map_num int matches 1 run function tkot:maps/map1_spectate
+# 2. 重算 in_arena，并把出界的观战者拉回观察点
+#    所有 48×48 的地图共用同一片场地和同一个观察点，所以只需要一份边界判定
+#    必须带 with storage tkot:map：map1_spectate 里的观察点坐标是宏 $(x) $(y_debug) $(z)
+function tkot:maps/map1_spectate with storage tkot:map
 
 # 3. 观战身份（3/4）统一切旁观模式
 #    想让调试队保持自由飞行，把这条改成 @a[scores={statu=3..4},team=!debug,...]

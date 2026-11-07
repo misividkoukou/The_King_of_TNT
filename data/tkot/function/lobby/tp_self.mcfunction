@@ -1,3 +1,3 @@
-# 大厅传送点 —— 仅执行者（首次进服的引导用）
-# 和 tp_all.mcfunction 保持一致；同样带“大厅存在才传送”的保护
-execute if score #lobby_ok int matches 1 run tp @s 6 -55 204 facing 24 -55 -24
+# 大厅传送点 —— 仅当前执行者（首次进服引导 / 单人兜底）
+# 坐标同样只在 tp_point.mcfunction 里维护
+function tkot:lobby/tp_point
