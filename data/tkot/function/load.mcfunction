@@ -8,6 +8,8 @@
 # 必须先 remove 再 add：如果这个计分板以前以别的类型（比如 dummy）存在过，
 # 单靠 add 会静默失败，类型就永远卡在旧值上，deathCount 也就永远不会自增。
 # death 是单局数据（每局开始都会清零），所以这里删掉是安全的。
+tellraw @a [{text:"TKOT Minigame 为了Areocraft服务器开发，适配26.3+版本\n",color:aqua},{text:"作者:misivid_koukou",color:green},{text:"版本v0.1.3"},{text:"详细更新报告前往bilibili",color:"aqua"}]
+
 scoreboard objectives remove death
 scoreboard objectives add death deathCount "死亡次数"
 

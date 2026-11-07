@@ -3,7 +3,7 @@
 #
 #  map_2_1.nbt 还没放进 data/tkot/structure/ 之前，先保持下面第 1 行（写死 1）。
 #   放好之后把这行注释掉、启用 random 那行，否则有一半概率抽到不存在的模板、铺图失败。
-execute store result score #map_num int run random value 1..2
+execute store result score #map_num int run random value 1..4
 
 
 # 把选中地图的参数装进工作 storage tkot:map
