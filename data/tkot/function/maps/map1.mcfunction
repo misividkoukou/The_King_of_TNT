@@ -18,12 +18,15 @@ data modify storage tkot:map z1 set value -48
 data modify storage tkot:map x2 set value 47
 data modify storage tkot:map z2 set value -1
 
-# 场地中心：出生点 / 观战点都基于它
+# 场地中心：观战点/调试点基于它
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
+
+# ── 出生高度：这张图单独维护（唯一的地图专属出生参数）──
+# states/2/tp/spread_players 会把参战者 tp 到 3×3 网格：
+#   (12|24|36, height, -12|-24|-36)
+# 填"脚所在那一格"。觉得卡墙/卡地就调这个值。
 data modify storage tkot:map height set value 10
-# 出生高度：地板是模板的 y=0 层，所以人站在 1
-data modify storage tkot:map y_spawn set value 1
 
 # 观战/调试观察点
 data modify storage tkot:map y_debug set value 60

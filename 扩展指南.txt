@@ -215,7 +215,13 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
     data modify storage tkot:map name   set value "<显示名>"      ← map_intro 会显示
     data modify storage tkot:map struct set value "tkot:<模板名>" ← 模板 id
 
-    ★ 后面那一堆 x1/y1/z1/x2/z2/x/z/y_spawn/y_debug/max_height 全部照抄，不要动。
+    ★ 后面的 x1/y1/z1/x2/z2/x/z/y_debug/max_height 全部照抄，不要动。
+
+    ★ 但 height 要按这张图改：
+      height = 参战者的出生高度。states/2/tp/spread_players 会把每个人
+      tp 到 3×3 网格 (12|24|36, height, -12|-24|-36) 上的某一格。
+      如果这张图在这 9 个位置有墙/有坑，就调 height 让落地高度对；
+      想让每个点都不一样，得改成每张图一份点位表（见下面【7】）。
 
     ★ 时间与刷怪规则必须在这张图里显式写，例如：
 
@@ -230,6 +236,7 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
 
     ① 总数
        data modify storage tkot:map total set value <地图总数>
+       （map_intro 的 $(total) 依赖它，漏了会报宏参数缺失）
 
     ② 抽图行
        地图只有 1 张时（random 范围必须 ≥2，所以不能写 1..1）：
@@ -237,15 +244,18 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
        地图 ≥2 张时：
          execute store result score #map_num int run random value 1..<总数>
 
-    ③ dispatch（每张图一行）
+    ③ dispatch —— 每张图一行，且必须覆盖 1..<总数> 全部区间
        execute if score #map_num int matches <N> run function tkot:maps/mapN
+
+       ★ 漏一行会怎样：抽到没 dispatch 的号 → tkot:map 里留着上一局的旧数据
+         → 模板名和坐标全错 → 铺图失败、场地是空的。
 
 【4】不用改的东西（因为共用场地）
     · forceload add / remove 的坐标 —— 所有 48×48 图都是 0 -48 47 -1
     · maps/map1_spectate 的包围盒与观察点 —— 所有图共用一份
     · states/3/map_returen/* 的清理范围 —— 参数从 storage 读，自动跟随
     · states/3/place、place_quiet —— 模板名从 storage 读，自动跟随
-    · states/2/spread —— 出生点从 storage 读，自动跟随
+    · states/2/tp/spread_players —— 只用 height 一个地图参数，其余是固定网格
 
 【5】测试
     · /reload（新加了 structure 文件，必须重新加载数据包才能被扫描到）
@@ -262,6 +272,31 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
     · mapN 里的 x1/y1/z1/x2/z2/x/z/max_height 全部按新图改
 
     这就是为什么强烈建议所有地图统一 48×48：上面这些都不用碰。
+
+【7】每张地图想用自己的出生点位（进阶）
+    现在的方案是：3×3 固定网格 + 每张图一个 height。
+    如果某张图恰好在 (12|24|36, ·, -12|-24|-36) 这些位置有墙，
+    只调 height 是解决不了的，需要让每张图带自己的点位表。
+
+    做法（推荐：9 个点都用 storage 存，mapN 里填 9 组坐标）：
+
+      # mapN.mcfunction 里
+      data modify storage tkot:map p1 set value [12, 10, -12]
+      data modify storage tkot:map p2 set value [12, 10, -24]
+      ...
+      data modify storage tkot:map p9 set value [36, 10, -36]
+
+      # spread_players.mcfunction 里（宏不能展开数组，所以要逐个取）
+      $execute store result score #px int run data get storage tkot:map p1[0]
+      ...
+
+    点数一多，逐个写很啰嗦。更省事的两个方向：
+    · 每张图固定用同一套高度，只要 9 个点都敞开 —— 保持现在的写法
+    · 直接用 spreadplayers：$spreadplayers $(x) $(z) 4 8 true @a[...]
+      让游戏自己找安全落点，一格墙都卡不住（但落点不可控）
+
+    后者其实就是最省心的方案，等你有空换过去即可。
+
 
 
 

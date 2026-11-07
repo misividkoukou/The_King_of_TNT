@@ -1,8 +1,8 @@
-# ── 落点：暂时固定（分散函数以后再写）──
-# 所有参战玩家统一落在场地中心 (x, y_spawn, z)。
-# 以后写分散函数时，把下面第一行换掉即可，其余不用动。
-# 原来的写法（留作参考）：
-# $tp @a[team=!debug,gamemode=!spectator] $(x) $(y_spawn) $(z)
+# ── 落位 ──
+# 参战者的落点由 states/2/tp/spread_players 决定：
+#   3×3 网格 (12|24|36, height, -12|-24|-36)，每人随机一个格子，
+#   其中 height 是每张地图自己维护的出生高度（见 maps/mapN.mcfunction）。
+# 以后换成 spreadplayers 就替换第 6 行那一句即可。
 function tkot:states/2/tp/spread_players with storage tkot:map
 # 调试队送到观察点
 $tp @a[team=debug] $(x) $(y_debug) $(z)

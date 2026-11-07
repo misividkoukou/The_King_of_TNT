@@ -1,5 +1,5 @@
-# 地图 2：48×48×48，单结构
-# 模板文件需要放到 data/tkot/structure/map_2_1.nbt（还没放，放好后才能被抽到）
+# 地图 2：营地（48×48×48，单结构）
+# 模板文件：data/tkot/structure/map_2_1.nbt
 
 data modify storage tkot:map id set value 2
 
@@ -19,9 +19,12 @@ data modify storage tkot:map z2 set value -1
 
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
+
+# ── 出生高度：这张图单独维护 ──
+# states/2/tp/spread_players 的落点是 3×3 网格 (12|24|36, height, -12|-24|-36)。
+# 这张图地形和 map1 不同，卡墙/卡地就调这个值（填"脚所在那一格"）。
 data modify storage tkot:map height set value 48
 
-data modify storage tkot:map y_spawn set value 16
 data modify storage tkot:map y_debug set value 60
 data modify storage tkot:map max_height set value 47
 
