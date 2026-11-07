@@ -1,1 +1,0 @@
-execute as @e[type=minecraft:tnt,tag=instant_explode_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air run data modify entity @s fuse set value 1
