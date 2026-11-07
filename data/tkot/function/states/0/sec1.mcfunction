@@ -8,7 +8,7 @@ execute if score #lobby_ok int matches 1 run spawnpoint @a 6 -55 204
 # 增益不依赖大厅是否放成功：即使大厅结构没加载，抗性也要在，否则大厅里能互相打死
 function tkot:effects/lobby
 
-# 0.5 准备阶段始终保持干净：每秒清一次 TNT 棍（背包），别的物品不动
+# 0.5 准备阶段始终保持干净：每秒清一次游戏道具（TNT/治疗池/羽毛/爆炸箭/胡萝卜）
 function tkot:items/clear_tnt
 
 # 1. 统计（身份判定已移到 states/0/tick1，那里每 tick 重算 statu，这里只负责数人头）

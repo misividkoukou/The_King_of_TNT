@@ -43,8 +43,10 @@ gamerule immediate_respawn true
 gamerule spawn_monsters false
 # 大厅默认禁止互殴；开战时由 states/1/next_statu 打开，结算时关回
 gamerule pvp false
-gamerule minecraft:allow_entering_nether_using_portals false
-gamerule allow_entering_nether_using_portals
+# 禁止下界传送门
+# 注意：gamerule 名不带命名空间前缀；原来那行写成 minecraft:... 会被拒，
+# 下面那行是裸查询（只打印值），已合并成一条正确的设置命令
+gamerule allow_entering_nether_using_portals false
 gamerule block_drops false
 gamerule entity_drops false
 gamerule locator_bar false
@@ -81,7 +83,8 @@ schedule function tkot:lobby/place_lobby 2t replace
 schedule function tkot:lobby/tp_all 3t replace
 
 schedule function tkot:ticks/tick1 1t replace
-schedule function tkot:ticks/sec1 1s replace
+schedule function tkot:ticks/sec1 1t replace
+schedule function tkot:ticks/sec3 2t replace
 
 # 每 30 秒的特殊道具发放事件（ticks/sec30 会自己续期，这里只负责第一次启动）
 schedule function tkot:ticks/sec15 1t replace

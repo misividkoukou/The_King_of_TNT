@@ -1,0 +1,91 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stick",
+          "weight": 10,
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "minecraft:max_stack_size": 99,
+                "minecraft:use_cooldown": {
+                  "seconds": 0.5,
+                  "cooldown_group": "tnt_throw"
+                },
+                "minecraft:custom_data": {
+                  "tnt": true,
+                  "type": "normal"
+                },
+                "minecraft:consumable": {
+                  "consume_seconds": 0,
+                  "animation": "none",
+                  "sound": "minecraft:intentionally_empty",
+                  "has_consume_particles": false
+                },
+                "minecraft:item_model": "minecraft:tnt",
+                "minecraft:item_name": {
+                  "text": "抛射型tnt"
+                },
+                "minecraft:lore": [
+                  {
+                    "text": "大家都喜欢tnt,不是嘛..",
+                    "color": "aqua"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:arrow",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "minecraft:max_stack_size": 99,
+                "minecraft:custom_data": {
+                  "exp_arrow": true
+                },
+                "minecraft:item_model": "minecraft:arrow",
+                "minecraft:item_name": {
+                  "text": "爆炸箭"
+                },
+                "minecraft:lore": [
+                  {
+                    "text": "射出去，爆炸!",
+                    "color": "aqua"
+                  }
+                ],
+                "minecraft:enchantment_glint_override": true
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:golden_carrot",
+          "weight": 1,
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "minecraft:max_stack_size": 99,
+                "minecraft:custom_data": {
+                  "game_item": true
+                },
+                "minecraft:enchantment_glint_override": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

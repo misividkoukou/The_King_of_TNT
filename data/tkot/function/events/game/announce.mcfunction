@@ -1,0 +1,1 @@
+execute if score #game_event_timer int matches ..5 run tellraw @a {text:"下一事件:"}

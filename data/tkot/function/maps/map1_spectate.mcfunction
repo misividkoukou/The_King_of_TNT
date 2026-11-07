@@ -10,6 +10,5 @@ execute as @a at @s unless entity @s[x=0,y=0,z=-48,dx=48,dy=61,dz=48] run tag @s
 # 以后做缩圈，就是把上面的包围盒逐圈改小，这条不用动。
 execute as @a[scores={statu=2},tag=!in_arena] run function tkot:states/2/mechanics/damage
 
-# 观战者（statu 3=已淘汰 / 4=局外闯入）不许飞出场地：出界拉回观察点。
-# 观察点坐标取 tkot:map 的 (x, y_debug, z)，不再硬编码 24 60 -24（那边改地图时只改一处）
-$execute as @a[scores={statu=3..4}] at @s unless entity @s[x=0,y=0,z=-48,dx=48,dy=61,dz=48] run tp @s $(x) $(y_debug) $(z)
+# 注意：观战者（statu 3/4）【不再】被拉回场地 —— 他们可以自由飞行观战。
+# 以前这里有一条「出界就 tp 回观察点 (x, y_debug, z)」的限制，已移除。

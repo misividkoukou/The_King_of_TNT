@@ -1,4 +1,6 @@
 # ── 每 tick 循环 ──
+#exp_arrow
+function item:exp_arrow/tick1
 
 # 落地即炸的 TNT：贴地就把 fuse 改成 1
 function item:instant_tnt/meet_ground

@@ -10,5 +10,3 @@ schedule function tkot:states/1/place_map 2t replace
 
 # 4. 开场倒计时
 scoreboard players set #temp sec 5
-
-tellraw @a [{"text":"--------------------------------","color":"gold","bold":true},{"text":"\n"},{"text":" TNT之王","color":"dark_green","bold":true},{"text":"\n"},{"text":"使用道具将其他玩家炸死或者丢入虚空吧，不准炸koukou :(","bold":true},{"text":"\n"},{"text":"--------------------------------","color":"gold","bold":true}]

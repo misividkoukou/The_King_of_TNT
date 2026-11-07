@@ -1,3 +1,6 @@
+worldborder center 0.0 0.0
+worldborder set 59999968
+
 # 胜利结算：本局存活者（statu=2）各 +1 胜场
 scoreboard players add @a[scores={statu=2}] player_win 1
 

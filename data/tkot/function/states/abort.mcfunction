@@ -1,6 +1,8 @@
 # ── 开局失败兜底 ──
 # 触发条件：该进入下一状态时，发现没有任何“本局玩家”（statu=2）或“准备中玩家”（statu=1）。
 # 以前遇到这种情况会一路跑下去，表现为「存活 0/0、谁都不淘汰、游戏永不结束」，且没有任何报错。
+worldborder center 0.0 0.0
+worldborder set 59999968
 
 tellraw @a [{"text":"[TKOT] ","color":"red"},{"text":"开局失败：没有检测到本局玩家，已中断并回到大厅。","color":"yellow"}]
 
@@ -19,6 +21,10 @@ scoreboard players set #temp sec 0
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0
 scoreboard players set #alive_player int 0
+
+scoreboard players reset #game_min_timer int
+scoreboard players reset #game_sec_timer int
+scoreboard players reset #game_event_timer int
 
 # 身份回大厅
 scoreboard players set @a statu 0

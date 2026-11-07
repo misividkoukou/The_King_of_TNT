@@ -1,8 +1,15 @@
 # ── 回合复位 ────────────────────────────────────────────────
 # 由 states/3/finish 在地图清理完成后调用一次。
 # 注意：#round 是累计局数，绝对不能复位；玩家的 player_win / total.death 是生涯数据，也不复位。
+worldborder center 0.0 0.0
+worldborder set 59999968
+
 
 # C1 假玩家分数
+
+scoreboard players reset #game_min_timer int
+scoreboard players reset #game_sec_timer int
+scoreboard players reset #game_event_timer int
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0
 scoreboard players set #alive_player int 0
