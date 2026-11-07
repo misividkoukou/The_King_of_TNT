@@ -19,7 +19,7 @@ data modify storage tkot:map z2 set value -1
 
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
-data modify storage tkot:map range set value 24
+data modify storage tkot:map height set value 48
 
 data modify storage tkot:map y_spawn set value 16
 data modify storage tkot:map y_debug set value 60

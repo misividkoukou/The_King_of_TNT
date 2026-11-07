@@ -21,7 +21,7 @@ data modify storage tkot:map z2 set value -1
 # 场地中心：出生点 / 观战点都基于它
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
-data modify storage tkot:map range set value 24
+data modify storage tkot:map height set value 10
 # 出生高度：地板是模板的 y=0 层，所以人站在 1
 data modify storage tkot:map y_spawn set value 1
 

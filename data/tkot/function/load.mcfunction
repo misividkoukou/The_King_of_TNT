@@ -11,6 +11,9 @@
 scoreboard objectives remove death
 scoreboard objectives add death deathCount "死亡次数"
 
+scoreboard objectives remove spawn_point 
+scoreboard objectives add spawn_point dummy "出生点"
+
 
 #玩家总体处理
 scoreboard objectives add statu dummy "玩家所处阶段"
@@ -79,4 +82,4 @@ schedule function tkot:ticks/tick1 1t replace
 schedule function tkot:ticks/sec1 1s replace
 
 # 每 30 秒的特殊道具发放事件（ticks/sec30 会自己续期，这里只负责第一次启动）
-schedule function tkot:ticks/sec30 30s replace
+schedule function tkot:ticks/sec15 1t replace

@@ -13,7 +13,7 @@
               "type": "minecraft:set_components",
               "components": {
                 "minecraft:max_stack_size": 99,
-                "minecraft:use_cooldown": { "seconds": 5, "cooldown_group": "tnt_throw" },
+                "minecraft:use_cooldown": { "seconds": 8, "cooldown_group": "tnt_throw" },
                 "minecraft:custom_data": { "tnt": true, "type": "instant" },
                 "minecraft:consumable": {
                   "consume_seconds": 0,
