@@ -11,6 +11,9 @@ schedule clear tkot:states/2/give_item
 # maps/pick 已经 forceload 过地图区块，abort 不走结算流程，必须在这里回收
 # （否则强加载区块会一直占着内存，而且已排队的开场铺图还会把地图放出来）
 schedule clear tkot:states/1/place_map
+# 结算延迟也要取消，否则它会在这条中止路径上再跑一次
+schedule clear tkot:states/3/delay
+scoreboard players set #over_wait int 0
 execute if score #map_num int matches 1.. run forceload remove 0 -48 47 -1
 
 # 清状态

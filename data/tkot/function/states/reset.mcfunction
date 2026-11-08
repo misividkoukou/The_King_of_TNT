@@ -13,13 +13,14 @@ scoreboard players reset #game_event_timer int
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0
 scoreboard players set #alive_player int 0
-scoreboard players set #give_count int 0
 scoreboard players set #prepare sec -1
 scoreboard players set #temp sec 0
 scoreboard players set #max_height int 0
 scoreboard players set #map_num int 0
 scoreboard players set #reset_timer int 0
 scoreboard players set #reset_retry int 0
+# 结算延迟开关必须归零，否则下一局开局时 sec1/tick1 会一直被门控住
+scoreboard players set #over_wait int 0
 
 # C2 玩家单局分数（deathCount 必须用 set，reset 会把这项删掉，scores={death=1..} 就永远不成立了）
 scoreboard players set @a death 0

@@ -8,6 +8,11 @@ execute if score #steps int matches 2 run scoreboard players add #game_event_tim
 execute if score #steps int matches 2 if score #game_sec_timer int matches 60 run scoreboard players add #game_min_timer int 1
 execute if score #steps int matches 2 if score #game_sec_timer int matches 60 run scoreboard players set #game_sec_timer int 0
 
+# 随机事件倒计时：#left = 20 - 当前秒数，只在正好剩 5 秒时提示一次
+scoreboard players set #left int 20
+execute if score #game_event_timer int matches 1.. run scoreboard players operation #left int -= #game_event_timer int
+execute if score #left int matches 5 run function tkot:events/game/announce
+
 # 缩圈：每分钟的第 59 秒判一次，由 statu_judge 按当前边界大小决定下一步
 # 写成 matches 1.. 而不是 1/2/3：链条 26→20→15→10→5 需要 5 次触发，
 # 只写 1/2/3 的话缩到 10 就断了，to5 和 end 永远走不到。

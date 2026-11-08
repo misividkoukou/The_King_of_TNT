@@ -66,6 +66,8 @@ gamemode adventure @a[team=!debug]
 scoreboard players set #steps int 0
 scoreboard players set #prepare sec -1
 scoreboard players set #lobby_cd int 0
+# 结算后"5 秒延迟回大厅"的开关：1 = 还在延迟中
+scoreboard players set #over_wait int 0
 scoreboard players set @a statu 0
 
 title @a clear
@@ -84,7 +86,9 @@ schedule function tkot:lobby/tp_all 3t replace
 
 schedule function tkot:ticks/tick1 1t replace
 schedule function tkot:ticks/sec1 1t replace
-schedule function tkot:ticks/sec3 2t replace
 
-# 每 30 秒的特殊道具发放事件（ticks/sec30 会自己续期，这里只负责第一次启动）
+# 每 3 秒补一次普通物资（ticks/sec3 自己续期，这里只负责第一次启动）
+schedule function tkot:ticks/sec3 3s replace
+
+# 每 15 秒的事件轮询（ticks/sec15 会自己续期，这里只负责第一次启动）
 schedule function tkot:ticks/sec15 1t replace

@@ -18,7 +18,6 @@ data remove storage tkot:temp total
 
 # 战斗开始前重置单局数据；身份不用动，statu=2 就是“本局存活”
 scoreboard players set @a death 0
-scoreboard players set #give_count int 0
 scoreboard players set #fight_time int 0
 
 function tkot:states/2/choose_map

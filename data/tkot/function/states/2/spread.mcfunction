@@ -14,5 +14,4 @@ title @a[team=!debug,gamemode=!spectator] title {"text":"开始战斗! 物资将
 
 # 5 秒后开始发物资
 # 金色胡萝卜打 game_item 标记，否则大厅的每秒清理认不出它、会一直留在背包里
-execute if score #steps int matches 2 run give @a[team=!debug,gamemode=!spectator,scores={statu=2}] golden_carrot[minecraft:custom_data={game_item:true}] 5
 schedule function tkot:states/2/give_item 5s replace

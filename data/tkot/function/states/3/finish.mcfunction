@@ -1,9 +1,5 @@
-tellraw @a [{"text":"胜利者：","color":"gold"},{"selector":"@a[scores={statu=2}]","color":"green"},{"text":" —— 已回到大厅，地图正在复位","color":"gray"}]
-playsound entity.player.levelup master @a
-
 # ── 收尾：卸强加载 → 回合复位 → 放开状态机 ──
-# 注意：上面这几行必须写在 states/reset 之前 —— reset 会把所有人 statu 归 0，
-# 之后就选不出胜利者了。
+# 结算播报已经在 states/3/next_statu 里播过了，这里只负责收尾。
 
 # 卸强加载（必须和 maps/pick 里 add 的那组完全一致，否则卸不掉）
 # 所有 48×48 的地图共用同一片场地，所以这里不需要按地图号区分
@@ -19,5 +15,5 @@ function tkot:lobby/tp_all
 # 回大厅再清一次背包：结算那一刻可能还有一条已排队的 give_item 刚执行完
 clear @a
 
-tellraw @a {"text":"地图已复位，可以开始新一轮了","color":"green"}
+tellraw @a {"text":"场地已清空，可以开始新一轮了","color":"green"}
 playsound entity.villager.yes master @a
