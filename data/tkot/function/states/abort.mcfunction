@@ -25,13 +25,45 @@ scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0
 scoreboard players set #alive_player int 0
 
-scoreboard players reset #game_min_timer int
-scoreboard players reset #game_sec_timer int
-scoreboard players reset #game_event_timer int
+# 同 states/reset：必须 set 0，不能 reset（reset 会让计分不存在，导致随机判断全部失效）
+scoreboard players set #game_min_timer int 0
+scoreboard players set #game_sec_timer int 0
+scoreboard players set #game_event_timer int 0
+scoreboard players set #event_fire int 0
+
+# 事件/投票/边界状态也要归零，否则中止后下一局会沿用旧状态
+# （比如 #border_dead 还是 1，下一局边界事件就永远抽不到）
+scoreboard players set #vote_ready int 0
+scoreboard players set #vote_total int 0
+scoreboard players set #next_event int 0
+scoreboard players set #vote_opened int 0
+scoreboard players set #rollmax int 0
+scoreboard players set #border_dead int 0
+scoreboard players set #border_id int 0
+scoreboard players set #border_range int 0
 
 # 身份回大厅
 scoreboard players set @a statu 0
 tag @a remove in_arena
+
+# 队伍也要清，否则中止后下一局的队伍分配会带着上一局的残留
+team leave @a[team=!debug]
+tag @a remove tm_done
+scoreboard players set #n_red int 0
+scoreboard players set #n_yellow int 0
+scoreboard players set #n_blue int 0
+scoreboard players set #n_green int 0
+scoreboard players set #mx int 0
+scoreboard players set #mx_id int 0
+scoreboard players set #mn int 0
+scoreboard players set #mn_id int 0
+scoreboard players set #diff int 0
+scoreboard players set #gt int 0
+scoreboard players set #ti int 0
+scoreboard players set #iter int 0
+scoreboard players set #team_used int 0
+scoreboard players set #alive_team int 0
+
 gamemode adventure @a
 # 开局失败也要把 PVP 关回大厅状态：这条路径不经过 states/3，否则会漏
 gamerule pvp false

@@ -1,0 +1,96 @@
+═══════════════════════════════════════════════════════════
+ 增加一个事件（现在是 2 步，不再需要改一堆列表）
+═══════════════════════════════════════════════════════════
+
+整个投票系统已经改成【事件表 + 宏循环】，所有按事件逐个写的地方都消失了。
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 1 步：写事件本体
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+新建 tkot/data/tkot/function/events/game/<名字>/xxx.mcfunction
+
+里面写这个事件真正要做的事（给物品 / 给效果 / 召唤实体 / 缩圈 …）。
+没有实体上下文，所以别用 @s，用 @a 或 @e[...]。
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 2 步：在事件表里加一行
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+文件：events/player/table.mcfunction
+
+ ① names  列表末尾追加显示名
+ ② colors 列表末尾追加颜色（同一位置，顺序必须对上）
+ ③ funcs  列表末尾追加事件本体的函数 id
+ ④ count  改成新的总数
+
+例如加第 7 个事件「陨石雨」：
+
+  data modify storage tkot:vote names  set value ["特殊道具","物资补给","光芒四射","隐身涂层","阴魂不散","边界收缩","陨石雨"]
+  data modify storage tkot:vote colors set value ["aqua","green","yellow","light_purple","dark_red","red","dark_gray"]
+  data modify storage tkot:vote funcs  set value ["tkot:events/game/offer_special_item/random","tkot:events/game/offer_normal_item/player","tkot:events/game/glowing/effect","tkot:events/game/invisible/effect","tkot:events/game/summon_tnt/random","tkot:events/game/border/statu_judge","tkot:events/game/meteor/start"]
+  data modify storage tkot:vote count  set value 7
+
+说明：
+ · 事件编号 = 列表下标 + 1，所以第 7 项 = 事件 7
+ · early 不用动 → 新事件属于"解锁时间之后才出现"的后段池
+ · 想让新事件一开始就能投/被随机到 → 把 early 也改成 7、late 改成 8
+
+  data modify storage tkot:vote early set value 7
+  data modify storage tkot:vote late  set value 8
+
+late 的含义：从第几项开始算"后段事件"（= early + 1）
+unlock 的含义：后段事件（含边界收缩）要战斗满几分钟才进池，现在是 2 分钟
+
+  data modify storage tkot:vote unlock set value 2
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 就这样，不用改其它任何文件
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+以下全部是表驱动的，自动跟随 count 变化：
+
+ · 投票按钮        events/player/step/open.mcfunction
+ · 计票            events/player/step/close.mcfunction
+ · 总票数/最高票   events/player/step/tally1.mcfunction
+ · 并列计数        events/player/step/tally2.mcfunction
+ · 唯一最高定案    events/player/step/tally3.mcfunction
+ · 并列抽签        events/player/step/tie.mcfunction
+ · 票数清零        events/player/step/reset.mcfunction
+ · 随机池范围      events/player/roll.mcfunction
+ · 事件名播报      events/player/say_event.mcfunction
+ · 事件本体调用    events/player/dispatch.mcfunction + call_func.mcfunction
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 原理（宏循环）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+run.mcfunction      #vi=1, #vj=0，把 i/j 写进 storage，进入 loop
+  ↓
+loop.mcfunction     宏：按 $(j) 取出 name/color/func 写进 storage
+                   然后 $function $(step) with storage tkot:vote
+  ↓
+step/xxx.mcfunction 宏：用 $(i) 和 $(name) 干活
+  ↓
+advance.mcfunction  #vi+1、#vj+1，若 #vi <= count 就回到 loop
+
+启动方式：
+  data modify storage tkot:vote step set value "tkot:events/player/step/xxx"
+  function tkot:events/player/run
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 注意事项
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+· 同一个宏函数里不能"先设 storage 再用 $(x)"：宏参数在调用时就替换完了。
+  需要两步时必须拆成两个函数（dispash → call_func 就是这么干的）。
+
+· 事件名不要带双引号，会破坏 tellraw 的 JSON。
+
+· 每人每轮只能投一票：trigger 计分板用一次就自动 disable，
+  要重新 enable 才能再投（open.mcfunction 会做这件事）。

@@ -15,6 +15,8 @@ scoreboard players set #prepare sec -1
 data remove storage tkot:temp sec
 data remove storage tkot:temp prepare
 data remove storage tkot:temp total
+# 清空临时坐标表（{} 表示整张表）
+data remove storage tnt:spawn {}
 
 # 战斗开始前重置单局数据；身份不用动，statu=2 就是“本局存活”
 scoreboard players set @a death 0

@@ -20,10 +20,9 @@ data modify storage tkot:map z2 set value -1
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
 
-# ── 出生高度：这张图单独维护 ──
-# states/2/tp/spread_players 的落点是 3×3 网格 (12|24|36, height, -12|-24|-36)。
-# 这张图地形和 map1 不同，卡墙/卡地就调这个值（填"脚所在那一格"）。
-data modify storage tkot:map height set value 48
+# ── 出生点 ──
+# 本图的 9 个出生点坐标硬编码在 states/2/tp/spawns/map2.mcfunction 里。
+# 不再用"统一网格 + 出生高度"，所以这里不需要 height 参数。
 
 data modify storage tkot:map y_debug set value 60
 data modify storage tkot:map max_height set value 47

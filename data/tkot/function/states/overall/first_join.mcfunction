@@ -13,5 +13,5 @@ gamemode adventure @s
 
 # 大厅传送点统一在 lobby/tp_point 里维护；单人用 tp_self（它内部就是调 tp_point）
 function tkot:lobby/tp_self
-tellraw @s [{"text":"欢迎来到 TKOT！","color":"gold"},{"text":" 站到 "},{"text":"绿色混凝土","color":"green"},{"text":" 上即可准备，2 人以上自动开局。","color":"white"}]
+tellraw @s ["",{"text":"欢迎来到 TKOT！\n","color":"gold","bold":true},{"text":"本小游戏由 ","color":"gray"},{"text":"misivid_koukou","color":"yellow"},{"text":" 开发\n遇到 Bug 欢迎前往 ","color":"gray"},{"text":"[GitHub]","color":"aqua","underlined":true,"click_event":{"action":"open_url","url":"https://github.com/misividkoukou/The_King_of_TNT/issues"},"hover_event":{"action":"show_text","value":" 提交 Issue "}},{"text":" 提交反馈。\n\n","color":"gray"},{"text":"欢迎加入内测群聊语音：","color":"gold"},{"text":"\n"},{"text":"196181438","color":"yellow","bold":true,"underlined":true,"click_event":{"action":"copy_to_clipboard","value":"196181438"},"hover_event":{"action":"show_text","value":"点击复制群号 196181438"}}]
 playsound entity.villager.yes master @s

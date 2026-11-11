@@ -5,4 +5,3 @@
 # 用 store success 捕获失败：如果表没加载/解析失败，聊天栏会直接告诉你，
 # 不用再靠猜。
 execute store success score #loot_ok int run loot give @s loot tkot:normal_item
-execute if score #loot_ok int matches 0 run tellraw @s [{"text":"[TKOT] 普通道具发放失败：战利品表 tkot:normal_item 未加载或解析错误","color":"red"}]

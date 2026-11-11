@@ -24,5 +24,5 @@ execute if score #max_height int matches -3.. run schedule function tkot:states/
 # 清完 → 直接收尾，【不再把地图放回去】
 # 理由：下一局开局时 states/1/game_prepare → place_quiet 会重新铺新抽到的图，
 #       所以这里放回旧图纯属浪费（5 万格结构），而且多一个可能失败的环节。
-execute if score #max_height int matches ..-4 run tellraw @a [{"text":"[TKOT] 场地已清空，准备下一局","color":"gray"}]
+execute if score #max_height int matches ..-4 run tellraw @a [{"text":"[TKOT] 场地已清空，下一局即将开始，快前往指定区域准备哦","color":"gray"}]
 execute if score #max_height int matches ..-4 run function tkot:states/3/finish

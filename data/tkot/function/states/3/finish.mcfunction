@@ -15,5 +15,5 @@ function tkot:lobby/tp_all
 # 回大厅再清一次背包：结算那一刻可能还有一条已排队的 give_item 刚执行完
 clear @a
 
-tellraw @a {"text":"场地已清空，可以开始新一轮了","color":"green"}
+tellraw @a {"text":"场地已清空，可以继续战斗力！","color":"green"}
 playsound entity.villager.yes master @a

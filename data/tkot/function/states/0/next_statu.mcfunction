@@ -21,6 +21,11 @@ scoreboard players set #prepare sec -1
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0
 
+# ── 分队 ──
+# 模式 1 单人混战：清空队伍；模式 2 系统分组；模式 3 自选分组并平衡
+# 必须在 statu=2 之后、spread（state 2）之前完成，出生点分配要用到队伍
+function tkot:teams/prepare
+
 # 推进状态机
 scoreboard players set #steps int 1
 

@@ -15,6 +15,15 @@ execute as @a[scores={statu=2,death=1..}] run scoreboard players set @s statu 3
 execute as @a[scores={statu=2..3}] run scoreboard players add #total_player int 1
 execute as @a[scores={statu=2}] run scoreboard players add #alive_player int 1
 
-# 只剩 0~1 人存活 → 结算（0 人是全员掉线的保险）
-# 至少打满 100 tick（5 秒）才允许结算：避免“出生即死 → 立刻结束 → 又开一局”的死循环
-execute if score #alive_player int matches ..1 if score #fight_time int matches 100.. run function tkot:states/2/next_statu
+# ── 队伍模式：统计"还有活人的队伍数" ──
+scoreboard players set #alive_team int 0
+execute if entity @a[team=red,scores={statu=2}] run scoreboard players add #alive_team int 1
+execute if entity @a[team=yellow,scores={statu=2}] run scoreboard players add #alive_team int 1
+execute if entity @a[team=blue,scores={statu=2}] run scoreboard players add #alive_team int 1
+execute if entity @a[team=green,scores={statu=2}] run scoreboard players add #alive_team int 1
+
+# ── 结算条件（至少打满 100 tick = 5 秒，避免出生即死 → 立刻结束的死循环）──
+# 单人混战：只剩 0~1 人存活
+execute if score #gamemode int matches 1 if score #alive_player int matches ..1 if score #fight_time int matches 100.. run function tkot:states/2/next_statu
+# 组队模式：只剩 0~1 支队伍有活人（0 是全员掉线的保险）
+execute if score #gamemode int matches 2.. if score #alive_team int matches ..1 if score #fight_time int matches 100.. run function tkot:states/2/next_statu

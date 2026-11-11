@@ -4,15 +4,15 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "items": "minecraft:feather",
+          "items": "minecraft:paper",
           "predicates": {
-            "minecraft:custom_data": "{fly_feather:true}"
+            "minecraft:custom_data": "{trap_item:true}"
           }
         }
       }
     }
   },
   "rewards": {
-    "function": "item:fly_feather/fly"
+    "function": "item:trap/place_trap"
   }
 }

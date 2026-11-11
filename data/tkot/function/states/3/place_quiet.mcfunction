@@ -5,4 +5,4 @@
 
 $execute store success score #map_ok int run place template $(struct) $(x1) $(y1) $(z1) none none 1 0
 
-$execute if score #map_ok int matches 0 run tellraw @a [{"text":"[TKOT] 开战前铺图失败：$(struct)","color":"red"}]
+$execute if score #map_ok int matches 0 run tellraw @a [{"text":"[TKOT] 开战前地图加载失败：$(struct)","color":"red"}]
