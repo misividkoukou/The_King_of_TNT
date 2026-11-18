@@ -2,7 +2,7 @@
 name: BUG
 about: 提交一个BUG
 title: "[BUG]"
-labels: bug, 等待确认
+labels: bug, 版本更新, 等待确认
 assignees: misividkoukou
 
 ---
