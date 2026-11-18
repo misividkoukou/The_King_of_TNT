@@ -16,5 +16,8 @@ execute if score #map_num int matches 2 run tellraw @a [{"text":"和平的一个
 execute if score #map_num int matches 3 run tellraw @a [{"text":"废弃前哨"},{text:"  "},{"text":"似乎是掠夺者的前哨，但是似乎有着不为人知的秘密...",color:"aqua"},{text:"\n"},{text:"作者:misivid_koukou",color:green,"hover_event":{"action":"show_text","value":{text:"提示居然不一样哦？!"}}}]
 execute if score #map_num int matches 4 run tellraw @a [{"text":"腐朽文明"},{text:"  "},{"text":"腐朽..?也许吧，毕竟全是蘑菇...",color:"aqua"},{text:"\n"},{text:"作者:winterdisa",color:green,"hover_event":{"action":"show_text","value":{text:"狂干几个小时弄出来的，今晚起飞了！"}}}]
 execute if score #map_num int matches 5 run tellraw @a [{"text":"又是夜晚，可是没有怪物"},{text:"  "},{"text":"视力大挑战这一块",color:"aqua"},{text:"\n"},{text:"作者:winterdisa",color:green,"hover_event":{"action":"show_text","value":{text:"唐福一个!"}}}]
+execute if score #map_num int matches 6 run tellraw @a [{"text":"图书馆 但为啥可以睡觉呢..."},{text:"  "},{"text":"你别管",color:"aqua"},{text:"\n"},{text:"作者:misivid_koukou",color:green,"hover_event":{"action":"show_text","value":{text:"cleaver"}}}]
+execute if score #map_num int matches 7 run tellraw @a [{"text":"Minecraft就要挖矿，不是吗"},{text:"  "},{"text":"挖呗，找的道路吗?",color:"aqua"},{text:"\n"},{text:"作者:TuDH",color:green}]
 tellraw @a {"text":"--------------------------",color:gold}
+
 playsound minecraft:ui.toast.challenge_complete master @a

@@ -9,5 +9,7 @@ worldborder center 24 -24
 worldborder set 50
 worldborder warning distance 2
 worldborder warning time 15s
+# 缓冲 0 格：一越过边界就掉血（贴着边界不掉，跨出去就掉）
 worldborder damage buffer 0
-worldborder damage amount 0.5
+# 每格每秒 0.1 伤害（原来 0.5，缩圈逼人但不会瞬间致死）
+worldborder damage amount 0.1

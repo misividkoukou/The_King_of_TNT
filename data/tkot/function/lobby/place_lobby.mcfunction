@@ -10,6 +10,12 @@
 #   掉出大厅   → lobby/rescue 自己传送
 # 以前这里也带一次条件传送，和上面几处重复，已去掉。
 
+# ① 放置前先清掉大厅区域内的所有实体（掉落物、盔甲架、TNT、箭…残留）
+#    ★ 必须排除 player，否则会把玩家一起 /kill 掉
+#    范围比结构本体往下多留 40 格，掉进虚空的大厅实体也能清到
+kill @e[type=!minecraft:player,x=0,y=-96,z=200,dx=48,dy=160,dz=48]
+
+# ② 放结构
 execute store success score #lobby_ok int run place template tkot:lobby 0 -56 200 none none 1 0
 
 # 成功 → 重试计数归零 + 3 秒冷却（防抖）

@@ -1,0 +1,10 @@
+1.增加物品:
+ 如果是触发类，加了json后加函数,去loot增添   不是触发类的直接再loot里面写就好
+ 需要game_item Tags   再去 tkot\data\tkot\function\items\clear_tnt.mcfunction 增添一个就好
+2.增加事件:
+ 增加后去random调用就好了
+
+牌子
+/data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 单人混战 ]","color":"yellow","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 1"}}','','','']}}
+/data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 系统分组 ]","color":"gold","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 2"}}','','','']}}
+/data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 自选分组 ]","color":"aqua","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 3"}}','','','']}}

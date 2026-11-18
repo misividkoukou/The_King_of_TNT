@@ -1,9 +1,8 @@
 # ── 落位 ──
-# 参战者的落点由 states/2/tp/spread_players 决定：
-#   3×3 网格 (12|24|36, height, -12|-24|-36)，每人随机一个格子，
-#   其中 height 是每张地图自己维护的出生高度（见 maps/mapN.mcfunction）。
-# 以后换成 spreadplayers 就替换第 6 行那一句即可。
-function tkot:states/2/tp/spread_players with storage tkot:map
+# 参战者的落点由 states/2/tp/spread_players 决定，
+# 每个地图的 9 个出生点硬编码在 states/2/tp/spawns/mapN.mcfunction 里。
+# 以后换成 spreadplayers 就替换下面这一句即可。
+function tkot:states/2/tp/spread_players
 # 调试队送到观察点
 $tp @a[team=debug] $(x) $(y_debug) $(z)
 

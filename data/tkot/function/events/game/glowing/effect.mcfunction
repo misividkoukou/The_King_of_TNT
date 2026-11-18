@@ -1,1 +1,1 @@
-effect give @a[team=!debug,gamemode=!spectator] glowing 10 0 false
+effect give @a[gamemode=!spectator,scores={statu=2}] glowing 10 0 false

@@ -1,0 +1,92 @@
+═══════════════════════════════════════════════════════════
+ 增加一个事件（4 步）
+═══════════════════════════════════════════════════════════
+
+投票与随机都用【事件表 + 宏循环】，不需要按事件逐个写逻辑。
+但"介绍文案"和"投票按钮"是硬编码的 tellraw，必须手动同步。
+
+编号规则：事件编号 = 它在 names 列表里的位置 + 1。
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 1 步：写事件本体
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+新建 data/tkot/function/events/game/<名字>/player.mcfunction
+
+  例：events/game/fly/player.mcfunction
+      effect give @a[team=!debug,gamemode=!spectator,scores={statu=2}] levitation 10 0 true
+
+如果有"持续状态"（重力、血量上限这类），再写两个函数：
+  set.mcfunction    → 改状态
+  reset.mcfunction  → 还原状态（回合结束必须还原，否则会带到下一局）
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 2 步：改事件总表  events/player/table.mcfunction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+在 names / colors / funcs 三个列表【末尾】各加一项（顺序一一对应）：
+
+  names  追加  "新事件名"
+  colors 追加  "aqua"          ← 现在统一 aqua
+  funcs  追加  "tkot:events/game/<名字>/player"
+
+然后改 count = 新的事件总数。
+
+early / late 怎么填：
+  · 想让它开局就能投 → early 改成新的总数，late 保持"总数"（即没有 late 事件）
+  · 想让它等解锁时间 → 把它放在列表【最后】，late = 它的编号，early = 它 - 1
+
+⚠ border 编号必须与 funcs 里 statu_judge 的位置一致（现在是 11），
+  加事件后如果 statu_judge 位置变了，border 也要跟着改。
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 3 步：加介绍行  events/player/intro.mcfunction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+复制一行，把编号和文案换成新的：
+
+  execute if score #events int matches <编号> run tellraw @a [{"text":"  ▸ ","color":"dark_gray"},{"text":"一句话介绍","color":"gray"}]
+
+这一行会在「[TKOT·事件] 事件名」之后自动播出（由 say_event 调用）。
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 4 步：加投票按钮  events/player/panel.mcfunction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+复制一个按钮片段，改文字 / 编号 / 悬停提示：
+
+  {"text":"[","color":"dark_gray"},
+  {"text":"新事件名","color":"green","bold":true,
+   "click_event":{"action":"run_command","command":"trigger vote set <编号>"},
+   "hover_event":{"action":"show_text","value":{"text":"一句话提示","color":"green"}}},
+  {"text":"]  ","color":"dark_gray"}
+
+⚠ 如果它是 late 事件（要等解锁），按钮要包一层：
+  execute if score #game_min_timer int matches <unlock>.. run tellraw ... （参考边界收缩那行）
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 检查清单
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ names / colors / funcs 三项数量相同
+□ count = 实际数量
+□ border 指向 statu_judge 的真实位置
+□ intro 有这个编号的介绍行
+□ panel 有这个编号的按钮（late 事件要有 game_min_timer 门控）
+□ 有持续状态的话，reset 里要还原
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 当前事件一览（11 个）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1  特殊道具        early
+ 2  物资补给        early
+ 3  光芒四射        early
+ 4  隐身涂层        early
+ 5  阴魂不散        early
+ 6  连锁换位        early
+ 7  御剑飞行        early
+ 8  月球漫步        early
+ 9  脆皮五花        early
+ 10 增生药剂        early
+ 11 边界收缩        late（解锁 2 分钟，且会"耗尽"）

@@ -20,8 +20,7 @@ data modify storage tkot:map z2 set value -1
 data modify storage tkot:map x set value 24
 data modify storage tkot:map z set value -24
 
-# 出生高度：states/2/tp/spread_players 会把参战者 tp 到 3×3 网格 (12|24|36, height, -12|-24|-36)
-data modify storage tkot:map height set value 48
+# 出生点：本图的 9 个坐标硬编码在 states/2/tp/spawns/map3.mcfunction 里（不再需要 height）
 
 data modify storage tkot:map y_debug set value 60
 data modify storage tkot:map max_height set value 47

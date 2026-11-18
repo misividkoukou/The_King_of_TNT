@@ -1,0 +1,1 @@
+execute as @a[team=!debug,gamemode=!spectator,scores={statu=2}] run function tkot:jobs/judge

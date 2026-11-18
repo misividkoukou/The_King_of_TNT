@@ -8,7 +8,7 @@
 # 必须先 remove 再 add：如果这个计分板以前以别的类型（比如 dummy）存在过，
 # 单靠 add 会静默失败，类型就永远卡在旧值上，deathCount 也就永远不会自增。
 # death 是单局数据（每局开始都会清零），所以这里删掉是安全的。
-tellraw @a [{text:"TKOT Minigame 为了Areocraft服务器开发，适配26.3+版本\n",color:aqua},{text:"作者:misivid_koukou",color:green},{text:"版本v0.1.3"},{text:"详细更新报告前往bilibili",color:"aqua"}]
+tellraw @a [{text:"TKOT Minigame 为了Areocraft服务器开发，适配26.3+版本\n",color:aqua},{text:"作者:misivid_koukou",color:green},{text:"版本v0.2.0"},{text:"详细更新报告前往bilibili",color:"aqua"}]
 
 scoreboard objectives remove death
 scoreboard objectives add death deathCount "死亡次数"
@@ -16,6 +16,19 @@ scoreboard objectives add death deathCount "死亡次数"
 scoreboard objectives remove spawn_point 
 scoreboard objectives add spawn_point dummy "出生点"
 
+scoreboard objectives remove job
+scoreboard objectives add job dummy "职业"
+
+# 编辑快捷栏 / 练习区
+#   p_id：每个玩家的固定编号（storage tkot:loadout 的键）
+#   area：0 = 大厅/竞技场（禁止使用道具）  1 = 练习区（允许）
+scoreboard objectives add p_id dummy "编辑编号"
+# 编号计数器必须放在一个 /reload 不会删除的计分板上。
+# 原来放在 int 里：load 开头会 remove int，计数器被一起抹掉，
+# 每次重载都从 1 重新发号 → 新玩家 p_id 和老玩家撞号。
+scoreboard objectives add pid dummy "编辑编号计数"
+execute unless score #pid_next pid matches 1.. run scoreboard players set #pid_next pid 0
+scoreboard objectives add area dummy "区域"
 
 #玩家总体处理
 scoreboard objectives add statu dummy "玩家所处阶段"
@@ -23,6 +36,8 @@ scoreboard objectives add round dummy "玩家参与的局数"
 scoreboard objectives add player_round dummy "玩家参与次数"
 scoreboard objectives add player_win dummy "玩家胜利次数"
 scoreboard objectives add total.death dummy "总死亡次数"
+scoreboard objectives remove rate
+scoreboard objectives add rate dummy "胜率"
 
 ##GAME##
 
@@ -33,8 +48,69 @@ scoreboard objectives add int dummy
 scoreboard objectives remove sec
 scoreboard objectives add sec dummy "秒"
 
+# 事件投票用的 trigger 计分板：给非 OP 玩家点聊天按钮用
+# （trigger 类型只能由玩家自己用 /trigger 改，权限交给 enable/disable 控制）
+scoreboard objectives remove vote
+scoreboard objectives add vote trigger "事件投票"
+
+# 模式告示牌用的 trigger 计分板（click_event 只能跑 trigger 才不要求 OP）
+scoreboard objectives remove mode_set
+scoreboard objectives add mode_set trigger "模式选择"
+
+scoreboard objectives remove job_trigger
+scoreboard objectives add job_trigger trigger "职业选择"
+
+scoreboard objectives remove lobby_trigger
+scoreboard objectives add lobby_trigger trigger "大厅选择"
+
+# 事件临时属性（重力 / 血量上限 / 安全坠落距离）的倒计时，单位：tick
+# ★ 不要用 schedule 驱动还原：schedule 出来的函数没有实体上下文，@s 一定会失败；
+#   而且 schedule ... replace 会互相覆盖，多人同时中招时只剩最后一个能还原。
+scoreboard objectives remove attr_timer
+scoreboard objectives add attr_timer dummy "事件属性剩余刻"
+
+# 事件总表（名称/颜色/事件函数/数量）——加事件只改这个文件
+function tkot:events/player/table
+
 team remove debug
 team add debug "调试者"
+
+##队伍（组队模式用）
+# #gamemode int：1 = 单人混战（默认）  2 = 系统分组  3 = 自选分组
+# 只做底层，不做切换界面；管理员用 /scoreboard players set #gamemode int N 切换
+# ★ 故意做成每次 /reload 都强制回到 1：重载=把一切恢复默认，避免残留一个奇怪的模式
+scoreboard players set #gamemode int 1
+
+# 四支队伍：红 / 黄 / 蓝 / 绿
+#   friendlyFire false          = 队友之间打不到（近战、箭都不行），但**爆炸伤害不受这个限制**
+#   seeFriendlyInvisibles true  = 队友隐身时自己仍能看见（这就是你要的"看得到相互的隐身"）
+team remove red
+team add red "红队"
+team modify red color red
+team modify red friendlyFire false
+team modify red seeFriendlyInvisibles true
+team modify red prefix {"text":"[红] ","color":"red"}
+
+team remove yellow
+team add yellow "黄队"
+team modify yellow color yellow
+team modify yellow friendlyFire false
+team modify yellow seeFriendlyInvisibles true
+team modify yellow prefix {"text":"[黄] ","color":"yellow"}
+
+team remove blue
+team add blue "蓝队"
+team modify blue color blue
+team modify blue friendlyFire false
+team modify blue seeFriendlyInvisibles true
+team modify blue prefix {"text":"[蓝] ","color":"blue"}
+
+team remove green
+team add green "绿队"
+team modify green color green
+team modify green friendlyFire false
+team modify green seeFriendlyInvisibles true
+team modify green prefix {"text":"[绿] ","color":"green"}
 
 ##游戏规则
 
@@ -68,6 +144,26 @@ scoreboard players set #prepare sec -1
 scoreboard players set #lobby_cd int 0
 # 结算后"5 秒延迟回大厅"的开关：1 = 还在延迟中
 scoreboard players set #over_wait int 0
+# ★ 三个计时器必须在这里就初始化成 0（不能用 reset）：
+#   reload 后如果它们不存在，roll_core 的 matches 判断全部失效，
+#   随机事件会被跳过、#events 用旧值 → 开局就重放上一局的最后一个事件。
+scoreboard players set #game_min_timer int 0
+scoreboard players set #game_sec_timer int 0
+scoreboard players set #game_event_timer int 0
+scoreboard players set #event_fire int 0
+# "玩家不足"提示的节流计数（秒）
+scoreboard players set #cancel_cd int 0
+# ★ 投票/事件状态也必须初始化为 0：
+#   #vote_ready 不存在时，announce 里 matches 1 和 matches 0 都不成立 → 一条消息都不发。
+scoreboard players set #vote_ready int 0
+scoreboard players set #vote_total int 0
+scoreboard players set #next_event int 0
+scoreboard players set #vote_opened int 0
+scoreboard players set #rollmax int 0
+# 边界"耗尽"标记 + 边界事件编号 + 上一次读到的边界尺寸
+scoreboard players set #border_dead int 0
+scoreboard players set #border_id int 0
+scoreboard players set #border_range int 0
 scoreboard players set @a statu 0
 
 title @a clear

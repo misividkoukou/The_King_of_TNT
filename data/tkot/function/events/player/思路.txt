@@ -1,0 +1,4 @@
+在20s的时候给玩家全局发bar，打开trigger权限，如果有玩家点击就将#event_<num>_vote int + 1 ，然后再10s时清除玩家的trigger权限,算出什么事件的得票数最多，然后将下一事件的id设为这个，记得要给以前的random加一个判定，只有在没有玩家投票的时候才会运行，否则就会重复，要记得对一样的得票数进行判断，如果存在相同的得票数，则由系统抽取，并在5s时通知玩家,tellraw如下
+tellraw @a [{text:"--------------------------\n",color:gold},{text:"事件由我决定!",color:aqua}]
+tellraw @a [{text:"[event1]",click_event:{}}]
+tellraw @a {"text":"--------------------------",color:gold}
