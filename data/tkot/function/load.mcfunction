@@ -16,6 +16,19 @@ scoreboard objectives add death deathCount "死亡次数"
 scoreboard objectives remove spawn_point 
 scoreboard objectives add spawn_point dummy "出生点"
 
+scoreboard objectives remove job
+scoreboard objectives add job dummy "职业"
+
+# 编辑快捷栏 / 练习区
+#   p_id：每个玩家的固定编号（storage tkot:loadout 的键）
+#   area：0 = 大厅/竞技场（禁止使用道具）  1 = 练习区（允许）
+scoreboard objectives add p_id dummy "编辑编号"
+# 编号计数器必须放在一个 /reload 不会删除的计分板上。
+# 原来放在 int 里：load 开头会 remove int，计数器被一起抹掉，
+# 每次重载都从 1 重新发号 → 新玩家 p_id 和老玩家撞号。
+scoreboard objectives add pid dummy "编辑编号计数"
+execute unless score #pid_next pid matches 1.. run scoreboard players set #pid_next pid 0
+scoreboard objectives add area dummy "区域"
 
 #玩家总体处理
 scoreboard objectives add statu dummy "玩家所处阶段"
@@ -23,6 +36,8 @@ scoreboard objectives add round dummy "玩家参与的局数"
 scoreboard objectives add player_round dummy "玩家参与次数"
 scoreboard objectives add player_win dummy "玩家胜利次数"
 scoreboard objectives add total.death dummy "总死亡次数"
+scoreboard objectives remove rate
+scoreboard objectives add rate dummy "胜率"
 
 ##GAME##
 
@@ -41,6 +56,18 @@ scoreboard objectives add vote trigger "事件投票"
 # 模式告示牌用的 trigger 计分板（click_event 只能跑 trigger 才不要求 OP）
 scoreboard objectives remove mode_set
 scoreboard objectives add mode_set trigger "模式选择"
+
+scoreboard objectives remove job_trigger
+scoreboard objectives add job_trigger trigger "职业选择"
+
+scoreboard objectives remove lobby_trigger
+scoreboard objectives add lobby_trigger trigger "大厅选择"
+
+# 事件临时属性（重力 / 血量上限 / 安全坠落距离）的倒计时，单位：tick
+# ★ 不要用 schedule 驱动还原：schedule 出来的函数没有实体上下文，@s 一定会失败；
+#   而且 schedule ... replace 会互相覆盖，多人同时中招时只剩最后一个能还原。
+scoreboard objectives remove attr_timer
+scoreboard objectives add attr_timer dummy "事件属性剩余刻"
 
 # 事件总表（名称/颜色/事件函数/数量）——加事件只改这个文件
 function tkot:events/player/table

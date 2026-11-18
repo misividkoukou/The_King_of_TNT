@@ -1,0 +1,2 @@
+# 职业 2「炸弹人」：抛射型 tnt
+give @s minecraft:stick[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:0.5,cooldown_group:"tnt_throw"},minecraft:custom_data={tnt:true,type:"normal"},minecraft:consumable={consume_seconds:0,animation:"none",sound:"intentionally_empty",has_consume_particles:false},minecraft:item_model="minecraft:tnt",minecraft:item_name={"text":"抛射型tnt"},minecraft:lore=[{text:"大家都喜欢tnt,不是嘛..",color:"aqua"}]] 2

@@ -21,6 +21,7 @@ execute if score #map_num int matches 3 run function tkot:states/2/tp/spawns/map
 execute if score #map_num int matches 4 run function tkot:states/2/tp/spawns/map4
 execute if score #map_num int matches 5 run function tkot:states/2/tp/spawns/map5
 execute if score #map_num int matches 6 run function tkot:states/2/tp/spawns/map6
+execute if score #map_num int matches 7 run function tkot:states/2/tp/spawns/map7
 
 # 把重生点改到各自脚下：
 # 不然被淘汰后会立刻在「大厅里的重生点」复活，结算那 5 秒就看不到人了。

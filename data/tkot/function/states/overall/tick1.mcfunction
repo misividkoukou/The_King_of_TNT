@@ -9,6 +9,11 @@ execute as @a[tag=!joined] run function tkot:states/overall/first_join
 execute as @a[scores={statu=2..3}] unless score @s round = #round int run scoreboard players set @s statu 0
 execute as @a[scores={statu=0},gamemode=spectator] run gamemode adventure @s
 
+# 2.5 中途重连补记参与：本局身份仍有效（statu 2/3），但身上没有 round_counted
+#     正常开战时 states/1/next_statu 会统一 +1 并打标记；这里只兜"开场掉线、开战后才回来"的漏网者。
+#     round_counted 只在开局/回合复位时统一清，所以一个人一局最多被补记一次。
+execute if score #steps int matches 2 as @a[scores={statu=2..3},tag=!round_counted] run function tkot:states/overall/round_count
+
 # 3. 掉出大厅兜底（位置判定）：先修大厅、再传送。
 #    不能靠死亡判定 —— 传送兜底让玩家死不了，那条路永远不触发。
 #    只在 大厅/准备阶段 跑：战斗中 statu 0/1 已被 in_game 转成观战，

@@ -18,5 +18,7 @@ clear @a[team=!debug] minecraft:arrow[minecraft:custom_data~{teleport_arrow:true
 clear @a[team=!debug] minecraft:paper[minecraft:custom_data~{trap_item:true}]
 # 风弹
 clear @a[team=!debug] minecraft:wind_charge[minecraft:custom_data~{game_item:true}]
+# 末影珍珠
+clear @a[team=!debug] minecraft:ender_pearl[minecraft:custom_data~{game_item:true}]
 # 金色胡萝卜（游戏发的都带 game_item 标记）
 clear @a[team=!debug] minecraft:golden_carrot[minecraft:custom_data~{game_item:true}]

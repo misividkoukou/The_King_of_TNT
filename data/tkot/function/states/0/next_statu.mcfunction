@@ -13,8 +13,12 @@ playsound entity.villager.yes player @a
 scoreboard players add #round int 1
 scoreboard players set @a[scores={statu=1}] statu 2
 scoreboard players operation @a[scores={statu=2}] round = #round int
-# 生涯：参与次数（原来 player_round 只在 first_join 设 0，从来没累加过）
-scoreboard players add @a[scores={statu=2}] player_round 1
+# 新一局：先摘掉"已计参与"标记 —— 由 states/1/next_statu 在开战瞬间重新打上。
+# 掉线玩家不会走到这里，但他们下次上台时同样会经过这一行，旧标记不会赖着。
+tag @a[scores={statu=2}] remove round_counted
+# 生涯：参与次数不在这里加 —— 已挪到 states/1/next_statu（真正开战那一刻）。
+# 原因：0→1 只是"上台定格"，随后 5 秒开场里如果全员掉线会走 abort，
+#       那一局根本没打起来，不该算一次参与。
 
 # 清理准备阶段的计数
 scoreboard players set #prepare sec -1

@@ -1,6 +1,7 @@
 # 收回进度：不撤销的话 consume_item 只会触发一次，之后再也扔不出 TNT
 advancement revoke @s only item:multishot_tnt_stick
 
+
 # ── 扇形三连 ──
 # lat 是「侧向偏移格数」：正数向左、0 正前、负数向右。
 # 每一发都重新算一次方向，所以三颗从同一个点出发、朝向不同，自然散开。

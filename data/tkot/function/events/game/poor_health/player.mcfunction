@@ -1,0 +1,1 @@
+execute as @a[gamemode=!spectator,scores={statu=2}] run function tkot:events/game/poor_health/set

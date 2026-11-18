@@ -38,8 +38,15 @@ TKOT 设计备忘
 【关键分数】
   #steps      当前状态
   #round      累计局数
-  #total_player   状态0=在线人数；状态2=本局人数(2~3)
+  #total_player   状态0=在线人数；状态2=本局人数，开战瞬间定格（掉线不缩水）
   #alive_player   状态2=本局存活人数(2)
   #total_prepare  准备台上的人数(1)
   #map_num    当前选中的地图编号
-  death       每名玩家本局死亡次数（deathCount）
+  death       每名玩家本局死亡次数（deathCount，开战与回合结束各清零一次）
+  player_round   生涯参与次数（真正开战那一刻 +1，abort 的空局不算）
+  player_win     生涯胜场（组队模式下获胜队全体 +1，含本局已淘汰的队友）
+  total.death    生涯被淘汰次数（每局每人最多 +1）
+  rate           临时值：面板计算胜率时用，显示完立即归零
+
+  round_counted  标签：本局已经计过参与次数，防止掉线重连重复 +1
+                 （开局摘掉 → 开战瞬间打上 → 回合复位/中止时清掉）

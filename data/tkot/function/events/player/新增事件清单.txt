@@ -1,96 +1,92 @@
 ═══════════════════════════════════════════════════════════
- 增加一个事件（现在是 2 步，不再需要改一堆列表）
+ 增加一个事件（4 步）
 ═══════════════════════════════════════════════════════════
 
-整个投票系统已经改成【事件表 + 宏循环】，所有按事件逐个写的地方都消失了。
+投票与随机都用【事件表 + 宏循环】，不需要按事件逐个写逻辑。
+但"介绍文案"和"投票按钮"是硬编码的 tellraw，必须手动同步。
+
+编号规则：事件编号 = 它在 names 列表里的位置 + 1。
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  第 1 步：写事件本体
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+新建 data/tkot/function/events/game/<名字>/player.mcfunction
 
-新建 tkot/data/tkot/function/events/game/<名字>/xxx.mcfunction
+  例：events/game/fly/player.mcfunction
+      effect give @a[team=!debug,gamemode=!spectator,scores={statu=2}] levitation 10 0 true
 
-里面写这个事件真正要做的事（给物品 / 给效果 / 召唤实体 / 缩圈 …）。
-没有实体上下文，所以别用 @s，用 @a 或 @e[...]。
-
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 第 2 步：在事件表里加一行
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-文件：events/player/table.mcfunction
-
- ① names  列表末尾追加显示名
- ② colors 列表末尾追加颜色（同一位置，顺序必须对上）
- ③ funcs  列表末尾追加事件本体的函数 id
- ④ count  改成新的总数
-
-例如加第 7 个事件「陨石雨」：
-
-  data modify storage tkot:vote names  set value ["特殊道具","物资补给","光芒四射","隐身涂层","阴魂不散","边界收缩","陨石雨"]
-  data modify storage tkot:vote colors set value ["aqua","green","yellow","light_purple","dark_red","red","dark_gray"]
-  data modify storage tkot:vote funcs  set value ["tkot:events/game/offer_special_item/random","tkot:events/game/offer_normal_item/player","tkot:events/game/glowing/effect","tkot:events/game/invisible/effect","tkot:events/game/summon_tnt/random","tkot:events/game/border/statu_judge","tkot:events/game/meteor/start"]
-  data modify storage tkot:vote count  set value 7
-
-说明：
- · 事件编号 = 列表下标 + 1，所以第 7 项 = 事件 7
- · early 不用动 → 新事件属于"解锁时间之后才出现"的后段池
- · 想让新事件一开始就能投/被随机到 → 把 early 也改成 7、late 改成 8
-
-  data modify storage tkot:vote early set value 7
-  data modify storage tkot:vote late  set value 8
-
-late 的含义：从第几项开始算"后段事件"（= early + 1）
-unlock 的含义：后段事件（含边界收缩）要战斗满几分钟才进池，现在是 2 分钟
-
-  data modify storage tkot:vote unlock set value 2
+如果有"持续状态"（重力、血量上限这类），再写两个函数：
+  set.mcfunction    → 改状态
+  reset.mcfunction  → 还原状态（回合结束必须还原，否则会带到下一局）
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 就这样，不用改其它任何文件
+ 第 2 步：改事件总表  events/player/table.mcfunction
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+在 names / colors / funcs 三个列表【末尾】各加一项（顺序一一对应）：
 
-以下全部是表驱动的，自动跟随 count 变化：
+  names  追加  "新事件名"
+  colors 追加  "aqua"          ← 现在统一 aqua
+  funcs  追加  "tkot:events/game/<名字>/player"
 
- · 投票按钮        events/player/step/open.mcfunction
- · 计票            events/player/step/close.mcfunction
- · 总票数/最高票   events/player/step/tally1.mcfunction
- · 并列计数        events/player/step/tally2.mcfunction
- · 唯一最高定案    events/player/step/tally3.mcfunction
- · 并列抽签        events/player/step/tie.mcfunction
- · 票数清零        events/player/step/reset.mcfunction
- · 随机池范围      events/player/roll.mcfunction
- · 事件名播报      events/player/say_event.mcfunction
- · 事件本体调用    events/player/dispatch.mcfunction + call_func.mcfunction
+然后改 count = 新的事件总数。
 
+early / late 怎么填：
+  · 想让它开局就能投 → early 改成新的总数，late 保持"总数"（即没有 late 事件）
+  · 想让它等解锁时间 → 把它放在列表【最后】，late = 它的编号，early = 它 - 1
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 原理（宏循环）
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-run.mcfunction      #vi=1, #vj=0，把 i/j 写进 storage，进入 loop
-  ↓
-loop.mcfunction     宏：按 $(j) 取出 name/color/func 写进 storage
-                   然后 $function $(step) with storage tkot:vote
-  ↓
-step/xxx.mcfunction 宏：用 $(i) 和 $(name) 干活
-  ↓
-advance.mcfunction  #vi+1、#vj+1，若 #vi <= count 就回到 loop
-
-启动方式：
-  data modify storage tkot:vote step set value "tkot:events/player/step/xxx"
-  function tkot:events/player/run
+⚠ border 编号必须与 funcs 里 statu_judge 的位置一致（现在是 11），
+  加事件后如果 statu_judge 位置变了，border 也要跟着改。
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- 注意事项
+ 第 3 步：加介绍行  events/player/intro.mcfunction
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+复制一行，把编号和文案换成新的：
 
-· 同一个宏函数里不能"先设 storage 再用 $(x)"：宏参数在调用时就替换完了。
-  需要两步时必须拆成两个函数（dispash → call_func 就是这么干的）。
+  execute if score #events int matches <编号> run tellraw @a [{"text":"  ▸ ","color":"dark_gray"},{"text":"一句话介绍","color":"gray"}]
 
-· 事件名不要带双引号，会破坏 tellraw 的 JSON。
+这一行会在「[TKOT·事件] 事件名」之后自动播出（由 say_event 调用）。
 
-· 每人每轮只能投一票：trigger 计分板用一次就自动 disable，
-  要重新 enable 才能再投（open.mcfunction 会做这件事）。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 第 4 步：加投票按钮  events/player/panel.mcfunction
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+复制一个按钮片段，改文字 / 编号 / 悬停提示：
+
+  {"text":"[","color":"dark_gray"},
+  {"text":"新事件名","color":"green","bold":true,
+   "click_event":{"action":"run_command","command":"trigger vote set <编号>"},
+   "hover_event":{"action":"show_text","value":{"text":"一句话提示","color":"green"}}},
+  {"text":"]  ","color":"dark_gray"}
+
+⚠ 如果它是 late 事件（要等解锁），按钮要包一层：
+  execute if score #game_min_timer int matches <unlock>.. run tellraw ... （参考边界收缩那行）
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 检查清单
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ names / colors / funcs 三项数量相同
+□ count = 实际数量
+□ border 指向 statu_judge 的真实位置
+□ intro 有这个编号的介绍行
+□ panel 有这个编号的按钮（late 事件要有 game_min_timer 门控）
+□ 有持续状态的话，reset 里要还原
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 当前事件一览（11 个）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1  特殊道具        early
+ 2  物资补给        early
+ 3  光芒四射        early
+ 4  隐身涂层        early
+ 5  阴魂不散        early
+ 6  连锁换位        early
+ 7  御剑飞行        early
+ 8  月球漫步        early
+ 9  脆皮五花        early
+ 10 增生药剂        early
+ 11 边界收缩        late（解锁 2 分钟，且会"耗尽"）

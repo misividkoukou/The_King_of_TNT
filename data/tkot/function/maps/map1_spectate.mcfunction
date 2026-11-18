@@ -8,8 +8,10 @@ execute as @a at @s if entity @s[x=0,y=-10,z=-48,dx=48,dy=71,dz=48] run tag @s a
 execute as @a at @s unless entity @s[x=0,y=-10,z=-48,dx=48,dy=71,dz=48] run tag @s remove in_arena
 
 # 边界：本局存活（statu=2）离开场地 → 判死（掉到 -10 以下、或飞出水平范围）。
-# 以后做缩圈，就是把上面的判定盒逐圈改小，这条不用动。
-execute as @a[scores={statu=2},tag=!in_arena] run function tkot:states/2/mechanics/damage
+# ★ 只对"战斗区域所在世界范围"的玩家生效（z -256..164）：
+#   大厅在 z 200..247，完全不重叠。这样某张地图的出生点函数缺失 / tp 失败时，
+#   玩家留在 lobby 也不会被这条 1000 伤害秒杀（以前就是这样死的）。
+execute as @a[scores={statu=2},tag=!in_arena] at @s if entity @s[x=-256,y=-64,z=-256,dx=512,dy=384,dz=420] run function tkot:states/2/mechanics/damage
 
 # ── 观战者活动范围（比场地宽松很多，但不能无限飞）──
 # 水平：场地向外各放宽 30 格 → x -30..77 / z -78..29

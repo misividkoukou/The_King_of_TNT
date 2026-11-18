@@ -9,6 +9,12 @@ scoreboard players set @s total.death 0
 # 保证 death 这项一定存在，否则 scores={death=1..} 对新人永远不成立
 scoreboard players add @s death 0
 
+# 编辑快捷栏：分配固定编号（storage tkot:loadout 的键）+ 默认在大厅区域
+# 计数器在独立计分板 pid 里，不会被 /reload 清零
+scoreboard players add #pid_next pid 1
+execute store result score @s p_id run scoreboard players get #pid_next pid
+scoreboard players set @s area 0
+
 gamemode adventure @s
 
 # 大厅传送点统一在 lobby/tp_point 里维护；单人用 tp_self（它内部就是调 tp_point）

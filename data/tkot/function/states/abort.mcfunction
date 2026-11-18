@@ -45,6 +45,8 @@ scoreboard players set #border_range int 0
 # 身份回大厅
 scoreboard players set @a statu 0
 tag @a remove in_arena
+# 中止的局不算参与，标记一并清掉，避免带到下一局
+tag @a remove round_counted
 
 # 队伍也要清，否则中止后下一局的队伍分配会带着上一局的残留
 team leave @a[team=!debug]

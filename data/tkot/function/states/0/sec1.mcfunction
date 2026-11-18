@@ -18,6 +18,14 @@ execute if score #lobby_warn int matches 10.. run scoreboard players set #lobby_
 # 0.5 准备阶段始终保持干净：每秒清一次游戏道具（TNT/治疗池/羽毛/爆炸箭/胡萝卜）
 function tkot:items/clear_tnt
 
+# 0.6 职业选择
+#   ★ 面板只发给【上台的那名玩家自己】（jobs/bar 用 @s），不会打扰别人。
+#     每个新上台的人各收到一次；走下台（statu=0）就摘标记，下次上台再弹。
+#   trigger 的读取统一放在 ticks/sec1。
+execute as @a[team=!debug,scores={statu=0}] run tag @s remove job_bar_shown
+execute as @a[team=!debug,scores={statu=1},tag=!job_bar_shown] run function tkot:jobs/bar
+execute as @a[team=!debug,scores={statu=1},tag=!job_bar_shown] run tag @s add job_bar_shown
+
 # 1. 统计（身份判定已移到 states/0/tick1，那里每 tick 重算 statu，这里只负责数人头）
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0

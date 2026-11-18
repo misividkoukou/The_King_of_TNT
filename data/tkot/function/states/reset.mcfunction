@@ -59,6 +59,8 @@ scoreboard players set @a death 0
 # C3 身份与位置标记：所有人回大厅身份 0
 scoreboard players set @a statu 0
 tag @a remove in_arena
+# 参与计数标记也清掉：下一局由 states/0/next_statu + states/1/next_statu 重新维护
+tag @a remove round_counted
 
 # C3.5 队伍：回合结束全部退队（下一局重新选/重新分），并清掉统计用的假玩家
 team leave @a[team=!debug]
@@ -101,8 +103,12 @@ effect clear @a
 # 大厅增益（饱和/抗性/生命恢复）由 effects/lobby 每秒刷新，这里不用再补
 gamerule pvp false
 gamerule spawn_monsters false
-# 兜底：如果这一局有人用了飞行羽毛还没到期，回合结束必须把重力还原，
-# 否则负重力会跟着人进大厅/下一局
+# 兜底：事件给的临时属性必须全部还原，否则会跟着人进大厅 / 下一局
+#   ① attr/reset 按标签还原本局正在生效的事件（御剑飞行 / 月球漫步 / 脆皮五花 / 增生药剂）
+#   ② 再把三项属性无条件复位一次：即使中途掉了标签（重载、异常退出）也能自愈
+execute as @a run function tkot:events/game/attr/reset
 execute as @a run attribute @s minecraft:gravity base reset
+execute as @a run attribute @s minecraft:max_health base reset
+execute as @a run attribute @s minecraft:safe_fall_distance base reset
 # 回合复位时也清空背包（任何路径经过 reset 都不会把道具留在大厅）
 clear @a

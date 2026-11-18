@@ -39,6 +39,9 @@ give @s minecraft:arrow[minecraft:max_stack_size=99,minecraft:custom_data={telep
 # 风弹（真正的风弹物品，右键正常使用）
 give @s minecraft:wind_charge[minecraft:max_stack_size=99,minecraft:custom_data={game_item:true},minecraft:item_name={"text":"风弹"},minecraft:lore=[{text:"就是风弹",color:"aqua"},{text:"丹丹",strikethrough:true}],minecraft:enchantment_glint_override=true] 8
 
+# 末影珍珠（降低冷却版）
+give @s minecraft:ender_pearl[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:0.5,cooldown_group:"fast_pearl"},minecraft:custom_data={game_item:true},minecraft:item_name={"text":"末影珍珠","color":"light_purple"},minecraft:lore=[{"text":"降低了冷却时间","color":"gray","italic":false}],minecraft:enchantment_glint_override=true] 1
+
 ########################
 ## 开局直接发的装备（states/2/give_item）
 ########################
@@ -47,7 +50,4 @@ give @s minecraft:wind_charge[minecraft:max_stack_size=99,minecraft:custom_data=
 give @s minecraft:crossbow[unbreakable={},minecraft:custom_data={crossbow:true,game_item:true},minecraft:item_name={"text":"永恒之驽"},minecraft:item_model="minecraft:crossbow",minecraft:lore=[{text:"实际上箭类物品都需要用我打出去!",color:"aqua"}]]
 
 # 击退棒
-give @s minecraft:stick[minecraft:enchantments={"minecraft:knockback":2},minecraft:custom_data={knockback_stick:true,game_item:true},minecraft:item_name={"text":"击退棒","color":"gold","bold":true},minecraft:enchantment_glint_override=true] 1
-
-# 珍珠
-give @a[team=!debug,gamemode=!spectator] minecraft:ender_pearl[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:0.5,cooldown_group:"fast_pearl"},minecraft:custom_data={game_item:true},minecraft:item_name={"text":"末影珍珠","color":"light_purple"},minecraft:lore=[{"text":"降低了冷却时间","color":"gray","italic":false}],minecraft:enchantment_glint_override=true] 1
+give @s minecraft:stick[minecraft:enchantments={"minecraft:knockback":1},minecraft:custom_data={knockback_stick:true,game_item:true},minecraft:item_name={"text":"击退棒","color":"gold","bold":true},minecraft:enchantment_glint_override=true] 1
