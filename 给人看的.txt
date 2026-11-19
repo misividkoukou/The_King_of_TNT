@@ -17,3 +17,14 @@
 生命值显示（管理员）
  /function tkot:config/health_on    打开 Tab（list 槽位）生命值
  /function tkot:config/health_off   关闭；/reload 后自动回到关闭
+
+大厅综合菜单
+ 每次回到大厅自动弹一条 tellraw：生涯击杀/死亡速览 + [ 图鉴 ] [ 战绩 ] 两个按钮
+ 文案在 data/tkot/function/lobby/menu.mcfunction；离开大厅的标记清理在 ticks/sec1
+
+K/D
+ 战绩面板里的 K/D 是一位小数比值（如 2.3），0 死亡时显示 "—"
+ 计算在 statistics/kd.mcfunction（kd=整数部分，kd_frac=小数部分），显示在 statistics/show.mcfunction
+
+硫方怪TNT（试验品，不参与发放）
+ /function item:sulfur_tnt/give    给自己 1 个，扔出去看弹跳效果（测 bounciness 属性）

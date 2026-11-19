@@ -345,23 +345,31 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
   data/item/function/bounce_tnt/throw_tnt_with_macro.mcfunction
   data/item/function/bounce_tnt/tick.mcfunction
 
-它与瞬爆弹的区别：瞬爆只要"贴地就引爆"，一条判断就够；
-弹跳需要在【贴地 且 仍在往下掉】时改竖直速度，所以多一个计数和一个速度采样：
+它与瞬爆弹的区别：瞬爆只要"贴地就引爆"，一条判断就够；弹跳要"每次触地弹一次、连弹 3 次"，
+所以用「装填 / 触发」两态，而不是看速度符号：
 
-  execute as @e[type=minecraft:tnt,tag=bounce_tnt] store result score @s bounce_vy run data get entity @s Motion[1] 1000
-  execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_vy matches ..-1 run scoreboard players add @s bounce 1
-  ... 同一条件 ... if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.4d
+  # 1. 脚下是空气（在空中）→ 装填
+  execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s if block ~ ~-0.1 ~ #minecraft:air run scoreboard players set @s bounce_arm 1
+  # 2. 贴地 + 已装填 → 记一次弹跳
+  ... unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 run scoreboard players add @s bounce 1
+  # 3. 第 1~3 次触地 → 上弹，然后清掉装填（同一段贴地不会再触发）
+  ... if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.45d
+  ... if score @s bounce_arm matches 1 run scoreboard players set @s bounce_arm 0
+  # 4. 第 4 次触地 → 摘标签，退化成普通 TNT
   ... if score @s bounce matches 4.. run tag @s remove bounce_tnt
 
-★ 坑一：只判断"贴地"会每 tick 都成立，落地瞬间就把次数上限打满（看起来"一落地连弹三次"）。
-  必须加"竖直速度为负（还在下落）"这个条件；反弹后速度变正，同一接触面就不会重复触发。
-★ 坑二：贴地判定用 ~ ~-0.1 ~（脚下 0.1 格），它在"快要接触地面"的那一 tick 就成立，
-  这一 tick 竖直速度通常还是负的 —— 这是能读到负值的前提。
-  如果实机发现 Motion 读不到负值（物理已经把竖直速度清零），备选方案是
-  「贴地时 kill 掉旧 TNT，再 summon 一颗带新 Motion 的 TNT」，注意保留 thrown_tnt 标签与 owner。
-★ 上限 3 次后摘掉 bounce_tnt 标签，退化成普通 TNT 等 fuse 爆炸；
-  它仍然带 thrown_tnt，所以 states/reset 的 kill @e[tag=thrown_tnt] 不用改。
+★ 为什么不用「Motion[1] 为负」判断在下落（v1 的写法，实测失败）：
+  每 tick 的函数在【实体物理之后】执行，TNT 撞地那一 tick 竖直速度通常已经被碰撞清零，
+  于是绝大多数落地读不到负值 → 直接不弹，表现和普通 TNT 一模一样。
+  用装填标记就与速度符号无关：每次触地必然触发一次，弹起后在空气中自动重新装填。
+★ 坑一：只判断"贴地"会每 tick 都成立，落地瞬间就把次数上限打满（"一落地连弹三次"）。
+  必须靠"装填"消抖：贴地不动时永远不会再装填。
+★ 坑二：fuse 要给够。上弹 0.45 格/刻时一次完整弹跳约 20 tick，3 次要 60 tick 出头，
+  所以弹跳弹用的是 fuse:80（4 秒），普通弹仍是 60。fuse 太短会"只弹两下就炸"。
+★ 上限 3 次后摘掉 bounce_tnt 标签；它仍然带 thrown_tnt，所以 states/reset 的清理不用改。
 ★ 冷却用独立组 bounce_throw，不和抛射型/瞬爆型共用 tnt_throw（否则会互相卡冷却）。
+★ Motion 仍可能被物理覆盖（这一版没再验证到该情况）；若实机仍几乎不弹，
+  备选方案是「贴地时 kill 掉旧 TNT，再 summon 一颗带新 Motion 的 TNT」，保留 thrown_tnt 与 owner。
 
 
 十二、模式告示牌（modes/setup 注释里提到的那一节）
@@ -396,3 +404,52 @@ modes/read 里有没有对应分值的分支。
 · 页间跳转全靠按钮里的 {"type":"show_dialog","dialog":"tkot:xxx"}，不需要命令、不需要 trigger。
 · 入口门控在 guide/tick1：只在 #steps=0（大厅）放开，开战后自动收回 trigger 权限。
 · 子页的 external_title 就是主菜单按钮上显示的文字，改名字改这个字段。
+
+
+十四、大厅综合菜单（图鉴 + 战绩入口）
+--------------------------------------------------
+每个玩家【每次回到大厅】都会收到一条 tellraw 菜单：生涯击杀/死亡速览 + 两个按钮。
+
+  文件：data/tkot/function/lobby/menu.mcfunction
+  触发：states/0/sec1 的 0.7 段（每秒一次，看到缺标记就发）
+  标记：lobby_menu_shown
+        · 发完立刻给自己打上（所以一秒只发一次，不会刷屏）
+        · ticks/sec1 在 #steps ≠ 0（离开大厅）时统一摘掉 → 下一局回来再弹
+  按钮：click_event 只能跑 trigger，所以
+        [ 图鉴 ] → trigger guide_trigger set 1   （guide/tick1 处理）
+        [ 战绩 ] → trigger lobby_trigger set 1   （statistics/tick1 处理）
+        两个 trigger 都只在大厅补权限，战斗中点了无效。
+
+想加第三个入口（例如"练习区"）就照 menu.mcfunction 里现有的按钮再拼一段，
+权限交给对应的 tick 函数补 enable 即可。
+
+战绩面板的 K/D 现在是「一位小数的比值」（如 2.3），不再是百分数：
+  statistics/kd.mcfunction 负责算：kd = 整数部分、kd_frac = 小数部分（×10 再除，纯整数运算）
+  statistics/show.mcfunction 显示，并在 total.death = 0 时不除法、显示 "—（暂无死亡）"
+
+
+十五、硫方怪 TNT（试验品，管理员专用）
+--------------------------------------------------
+用来验证"26.2 新增的 minecraft:bounciness 属性到底能弹多高"，
+不参与任何发放，只能手动取：
+
+  /function item:sulfur_tnt/give      # 给自己一个"硫方怪TNT（试验）"
+
+文件：
+  data/item/advancement/sulfur_tnt_stick.json     吃下 → 触发投掷
+  data/item/function/sulfur_tnt/give.mcfunction   管理员取用
+  data/item/function/sulfur_tnt/throw.mcfunction  瞄准 + 召唤
+  data/item/function/sulfur_tnt/summon.mcfunction 召唤本体（宏）
+
+召唤出来的是一颗"装着 TNT 的硫方怪"：
+  $summon minecraft:sulfur_cube ~ ~1.62 ~ {Tags:["thrown_tnt","sulfur_test_tnt"],fuse:90,
+          equipment:{body:{id:"minecraft:tnt",count:1}},Motion:[$(mx)d,$(my)d,$(mz)d]}
+  $attribute @e[type=minecraft:sulfur_cube,tag=sulfur_test_tnt,limit=1,sort=nearest] minecraft:bounciness base set 1.0
+
+★ Java 版硫方怪【没有独立的 archetype NBT】：原型由 equipment.body 里的方块推导，
+  填 minecraft:tnt 就会走 Explosive 原型（有爆炸参数，炸完不分裂小方块）。
+★ fuse = -1 是未点燃；给正数就直接点燃。这里给 90（4.5 秒），留时间看弹跳。
+★ minecraft:bounciness 取值 0..1、默认 0，1.0 是"落地几乎不衰减速度"。
+  Explosive 原型本身还会挂属性修饰符，base 1.0 之后可能被夹到上限，属正常现象。
+★ 它带 thrown_tnt，回合结束时 states/reset 的 kill @e[tag=thrown_tnt] 会一起清掉。
+★ 这个物品带 custom_data {tnt:true}，所以大厅每秒的 clear_tnt 也会收走，不会留在背包里。
