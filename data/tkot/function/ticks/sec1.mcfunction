@@ -14,6 +14,10 @@ execute if score #steps int matches 0 as @a[team=!debug,scores={statu=1}] run sc
 #   这样战斗中再点告示牌/按钮会直接被拒，职业锁死到本局结束。
 execute unless score #steps int matches 0 run scoreboard players reset @a[team=!debug] job_trigger
 
+# 离开大厅就摘掉"综合菜单已弹过"的标记 → 下一局回到大厅会再弹一次
+#   （states/0/sec1 每 tick 看到缺标记就发菜单并补标记）
+execute unless score #steps int matches 0 run tag @a remove lobby_menu_shown
+
 execute if score #steps int matches 0 run function tkot:states/0/sec1
 execute if score #steps int matches 1 run function tkot:states/1/sec1
 execute if score #steps int matches 2 run function tkot:states/2/sec1

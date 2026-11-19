@@ -1,0 +1,18 @@
+{
+  "criteria": {
+    "consume": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "minecraft:stick",
+          "predicates": {
+            "minecraft:custom_data": "{tnt:true,type:\"sulfur_test\"}"
+          }
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "item:sulfur_tnt/throw"
+  }
+}

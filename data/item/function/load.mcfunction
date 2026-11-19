@@ -8,12 +8,15 @@ scoreboard objectives remove calc_z
 scoreboard objectives add calc_z dummy
 
 # 弹跳 TNT 用的计分板（挂在 TNT 实体上，不是玩家）
-#   bounce    ：这颗 TNT 已经弹了几次（上限 3 次）
-#   bounce_vy ：本 tick 的竖直速度 ×1000（只在为负 = 下落中时才反弹）
+#   bounce     ：这颗 TNT 已经弹了几次（上限 3 次）
+#   bounce_arm ："在空中"标记，1 = 已装填（下次触地可以弹）。
+#                ★ 不能用 Motion[1] 的符号判断"在下落"：本 tick 函数在实体物理之后跑，
+#                  落地那 tick 竖直速度常已被清零，实测会几乎不弹。改用装填标记后
+#                  每次触地只触发一次，也不依赖速度符号。
 scoreboard objectives remove bounce
 scoreboard objectives add bounce dummy
-scoreboard objectives remove bounce_vy
-scoreboard objectives add bounce_vy dummy
+scoreboard objectives remove bounce_arm
+scoreboard objectives add bounce_arm dummy
 
 
 # 每 tick 循环调度：item:tick/tick1 负责瞬爆 TNT 贴地检测 + 飞行羽毛计时

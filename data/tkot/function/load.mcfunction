@@ -46,8 +46,12 @@ scoreboard objectives add total.kill dummy "总击杀次数"
 scoreboard objectives remove rate
 scoreboard objectives add rate dummy "胜率"
 # KD 只是统计面板的临时值（和 rate 一样，显示完就清零），可以 remove+add
+#   kd      = K/D 的整数部分
+#   kd_frac = K/D 的小数部分（0..9，一位小数）
 scoreboard objectives remove kd
 scoreboard objectives add kd dummy "击杀死亡比"
+scoreboard objectives remove kd_frac
+scoreboard objectives add kd_frac dummy "击杀死亡比小数"
 
 ##GAME##
 
@@ -87,6 +91,10 @@ scoreboard objectives add lobby_trigger trigger "大厅选择"
 #   真正的 /dialog show 由 guide/open 以服务端权限执行（见 guide/tick1 的门控）。
 scoreboard objectives remove guide_trigger
 scoreboard objectives add guide_trigger trigger "图鉴"
+
+# 大厅综合菜单的"已弹过"标记：重载后清一次，让所有人都能立刻再看到菜单
+#   （正常运行时的摘除由 ticks/sec1 在离开大厅时做）
+tag @a remove lobby_menu_shown
 
 # 事件临时属性（重力 / 血量上限 / 安全坠落距离）的倒计时，单位：tick
 # ★ 不要用 schedule 驱动还原：schedule 出来的函数没有实体上下文，@s 一定会失败；
