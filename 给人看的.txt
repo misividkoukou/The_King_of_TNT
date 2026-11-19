@@ -8,3 +8,12 @@
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 单人混战 ]","color":"yellow","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 1"}}','','','']}}
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 系统分组 ]","color":"gold","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 2"}}','','','']}}
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 自选分组 ]","color":"aqua","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 3"}}','','','']}}
+
+图鉴（玩家向）
+ 大厅里点聊天栏的 [ 查看图鉴 ]；老玩家可自己输 /trigger guide_trigger set 1
+ 内容在 data/tkot/dialog/guide_*.json，改文案直接改 JSON，/reload 后生效
+ 只有大厅阶段（#steps=0）能打开，开战后自动失效
+
+生命值显示（管理员）
+ /function tkot:config/health_on    打开 Tab（list 槽位）生命值
+ /function tkot:config/health_off   关闭；/reload 后自动回到关闭
