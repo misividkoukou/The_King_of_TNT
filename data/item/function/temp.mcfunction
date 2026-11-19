@@ -21,6 +21,9 @@ give @s minecraft:stick[minecraft:max_stack_size=99,minecraft:use_cooldown={seco
 # 多重射击tnt
 give @s minecraft:stick[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:1,cooldown_group:"tnt_throw"},minecraft:custom_data={tnt:true,type:"multishot"},minecraft:consumable={consume_seconds:0,animation:"none",sound:"minecraft:intentionally_empty",has_consume_particles:false},minecraft:item_model="minecraft:tnt",minecraft:item_name={"text":"多重射击tnt"},minecraft:enchantment_glint_override=true,minecraft:lore=[{text:"有谁不想一口气丢几个TNT出去呢",color:"aqua"},{text:"时代少年团这一块",strikethrough:true}]] 1
 
+# 弹跳型tnt（冷却用独立组 bounce_throw，不和普通弹抢 tnt_throw）
+give @s minecraft:stick[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:1,cooldown_group:"bounce_throw"},minecraft:custom_data={tnt:true,type:"bounce"},minecraft:consumable={consume_seconds:0,animation:"none",sound:"minecraft:intentionally_empty",has_consume_particles:false},minecraft:item_model="minecraft:tnt",minecraft:item_name={"text":"弹跳型tnt"},minecraft:enchantment_glint_override=true,minecraft:lore=[{text:"落地会弹起来，弹三下才认命",color:"aqua"},{text:"一蹦一跳地来炸你",color:"gray"}]] 1
+
 # 治疗池
 give @s minecraft:beacon[minecraft:max_stack_size=99,minecraft:use_cooldown={seconds:5,cooldown_group:"heal_items"},minecraft:custom_data={heal_pool:true},minecraft:consumable={consume_seconds:0,animation:"none",sound:"minecraft:block.beacon.activate",has_consume_particles:false},minecraft:item_model="minecraft:beacon",minecraft:item_name={"text":"治疗池"},minecraft:lore=[{text:"生成一个治疗云，我活过来了...",color:"aqua"}],minecraft:enchantment_glint_override=true] 1
 

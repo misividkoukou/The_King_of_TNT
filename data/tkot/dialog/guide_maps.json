@@ -1,0 +1,193 @@
+{
+  "type": "minecraft:notice",
+  "title": {
+    "text": "地图一览",
+    "color": "aqua",
+    "bold": true
+  },
+  "external_title": {
+    "text": "地图一览"
+  },
+  "can_close_with_escape": true,
+  "body": [
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "每局从下列 7 张图里随机抽一张，所有地图统一 48×48 场地。",
+        "color": "gray"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "1. 特殊地图:怪物之夜",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "深夜...来临了... 在这里,最恐怖的也许不是玩家....（作者：misivid_koukou）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "2. 营地",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "和平的一个营地。问题是，怎么像村庄一样啊喂。（作者：winterdisa）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "3. 废弃前哨",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "似乎是掠夺者的前哨，但是似乎有着不为人知的秘密...（作者：misivid_koukou）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "4. 腐朽文明",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "腐朽..? 也许吧，毕竟全是蘑菇...（作者：winterdisa）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "5. 天空栈道",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "又是夜晚，可是没有怪物。视力大挑战这一块。（作者：winterdisa）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "6. 图书馆",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "图书馆，但为啥可以睡觉呢... 你别管。（作者：misivid_koukou）"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "7. 洞穴",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "Minecraft 就要挖矿，不是吗。挖呗，找得到路吗?（作者：TuDH）"
+      }
+    }
+  ],
+  "action": {
+    "label": {
+      "text": "← 返回主菜单"
+    },
+    "width": 150,
+    "action": {
+      "type": "show_dialog",
+      "dialog": "tkot:guide_main"
+    }
+  }
+}

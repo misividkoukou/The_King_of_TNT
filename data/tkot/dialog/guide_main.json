@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:dialog_list",
+  "title": { "text": "TNT之王 · 图鉴", "color": "gold", "bold": true },
+  "external_title": { "text": "图鉴" },
+  "dialogs": [
+    "tkot:guide_items",
+    "tkot:guide_jobs",
+    "tkot:guide_maps",
+    "tkot:guide_modes"
+  ],
+  "columns": 2,
+  "button_width": 150,
+  "can_close_with_escape": true,
+  "exit_action": {
+    "label": { "text": "关闭", "color": "gray" }
+  }
+}

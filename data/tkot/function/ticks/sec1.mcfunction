@@ -4,7 +4,10 @@ execute unless score #steps int matches 2 run function tkot:states/overall/clean
 
 # 职业选择：只在大厅开放
 #   读 trigger + 给站台上的人开权限
-execute if score #steps int matches 0 as @a[team=!debug,scores={job_trigger=1..4}] run function tkot:jobs/read
+#   ★ 这里故意放宽成 1..：具体分值由 jobs/read 精确分发（1=重开面板，2/3/4=三个职业），
+#     写死 1..4 会让以后新增第 4 个职业时"多改一处"。战斗阶段由下面第 12 行统一 reset，
+#     所以放宽不会误触发。
+execute if score #steps int matches 0 as @a[team=!debug,scores={job_trigger=1..}] run function tkot:jobs/read
 execute if score #steps int matches 0 as @a[team=!debug,scores={statu=1}] run scoreboard players enable @s job_trigger
 
 # 开始游戏后就关掉：撤销所有 trigger 权限（reset 会同时清掉分数并禁用 trigger）

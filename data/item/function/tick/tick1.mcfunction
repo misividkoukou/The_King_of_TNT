@@ -7,5 +7,7 @@ function item:tp_arrow/tp
 function item:trap/tick1
 # 落地即炸的 TNT：贴地就把 fuse 改成 1
 function item:instant_tnt/meet_ground
+# 弹跳 TNT：贴地且正在下落时上弹，弹满 3 次退化成普通 TNT
+function item:bounce_tnt/tick
 
 schedule function item:tick/tick1 1t replace

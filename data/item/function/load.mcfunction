@@ -7,6 +7,14 @@ scoreboard objectives add calc_y dummy
 scoreboard objectives remove calc_z
 scoreboard objectives add calc_z dummy
 
+# 弹跳 TNT 用的计分板（挂在 TNT 实体上，不是玩家）
+#   bounce    ：这颗 TNT 已经弹了几次（上限 3 次）
+#   bounce_vy ：本 tick 的竖直速度 ×1000（只在为负 = 下落中时才反弹）
+scoreboard objectives remove bounce
+scoreboard objectives add bounce dummy
+scoreboard objectives remove bounce_vy
+scoreboard objectives add bounce_vy dummy
+
 
 # 每 tick 循环调度：item:tick/tick1 负责瞬爆 TNT 贴地检测 + 飞行羽毛计时
 # 每 秒 循环调度：item:tick/sec1 负责治疗池计时
