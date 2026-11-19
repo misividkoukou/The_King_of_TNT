@@ -353,7 +353,7 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
   # 2. 贴地 + 已装填 → 记一次弹跳
   ... unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 run scoreboard players add @s bounce 1
   # 3. 第 1~3 次触地 → 上弹，然后清掉装填（同一段贴地不会再触发）
-  ... if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.45d
+  ... if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.6d
   ... if score @s bounce_arm matches 1 run scoreboard players set @s bounce_arm 0
   # 4. 第 4 次触地 → 摘标签，退化成普通 TNT
   ... if score @s bounce matches 4.. run tag @s remove bounce_tnt
@@ -364,8 +364,9 @@ tkot:throw.spd 已存在，否则会报宏参数缺失。
   用装填标记就与速度符号无关：每次触地必然触发一次，弹起后在空气中自动重新装填。
 ★ 坑一：只判断"贴地"会每 tick 都成立，落地瞬间就把次数上限打满（"一落地连弹三次"）。
   必须靠"装填"消抖：贴地不动时永远不会再装填。
-★ 坑二：fuse 要给够。上弹 0.45 格/刻时一次完整弹跳约 20 tick，3 次要 60 tick 出头，
-  所以弹跳弹用的是 fuse:80（4 秒），普通弹仍是 60。fuse 太短会"只弹两下就炸"。
+★ 坑二：fuse 要给够。上弹 0.6 格/刻（约 3 格高）时一次完整弹跳约 26 tick，3 次要 78 tick 出头，
+  所以弹跳弹用的是 fuse:100（5 秒），普通弹仍是 60。fuse 太短会"只弹两下就炸"。
+  （0.45 实测偏矮，0.6 是抬高一档后的值；想更高就再改这一个数，同时把 fuse 往上加。）
 ★ 上限 3 次后摘掉 bounce_tnt 标签；它仍然带 thrown_tnt，所以 states/reset 的清理不用改。
 ★ 冷却用独立组 bounce_throw，不和抛射型/瞬爆型共用 tnt_throw（否则会互相卡冷却）。
 ★ Motion 仍可能被物理覆盖（这一版没再验证到该情况）；若实机仍几乎不弹，
@@ -434,17 +435,23 @@ modes/read 里有没有对应分值的分支。
 不参与任何发放，只能手动取：
 
   /function item:sulfur_tnt/give      # 给自己一个"硫方怪TNT（试验）"
+  /function item:sulfur_tnt/test      # 不吃道具，直接按视线投一颗（排查用）
 
 文件：
   data/item/advancement/sulfur_tnt_stick.json     吃下 → 触发投掷
   data/item/function/sulfur_tnt/give.mcfunction   管理员取用
-  data/item/function/sulfur_tnt/throw.mcfunction  瞄准 + 召唤
-  data/item/function/sulfur_tnt/summon.mcfunction 召唤本体（宏）
+  data/item/function/sulfur_tnt/throw.mcfunction  吃道具入口（只负责 revoke 进度）
+  data/item/function/sulfur_tnt/test.mcfunction   投射本体：瞄准 + 召唤 + 成功/失败反馈
+  data/item/function/sulfur_tnt/summon.mcfunction 召唤（宏）
 
-召唤出来的是一颗"装着 TNT 的硫方怪"：
-  $summon minecraft:sulfur_cube ~ ~1.62 ~ {Tags:["thrown_tnt","sulfur_test_tnt"],fuse:90,
-          equipment:{body:{id:"minecraft:tnt",count:1}},Motion:[$(mx)d,$(my)d,$(mz)d]}
-  $attribute @e[type=minecraft:sulfur_cube,tag=sulfur_test_tnt,limit=1,sort=nearest] minecraft:bounciness base set 1.0
+召唤分两步，故意不写成一整条：
+  $summon minecraft:sulfur_cube ~ ~1.62 ~ {Tags:["thrown_tnt","sulfur_test_tnt"],fuse:90,Motion:[$(mx)d,$(my)d,$(mz)d]}
+  data modify entity @e[...] equipment.body set value {id:"minecraft:tnt",count:1}
+  item replace entity @e[...] armor.body with minecraft:tnt
+  $attribute @e[...] minecraft:bounciness base set 1.0
+
+先"裸召唤"再塞方块，是为了让失败可见：实体出不来 = 召唤语句本身有问题；
+实体出来了但没 TNT = 两条塞方块的路都不被这个版本接受。
 
 ★ Java 版硫方怪【没有独立的 archetype NBT】：原型由 equipment.body 里的方块推导，
   填 minecraft:tnt 就会走 Explosive 原型（有爆炸参数，炸完不分裂小方块）。
@@ -453,3 +460,10 @@ modes/read 里有没有对应分值的分支。
   Explosive 原型本身还会挂属性修饰符，base 1.0 之后可能被夹到上限，属正常现象。
 ★ 它带 thrown_tnt，回合结束时 states/reset 的 kill @e[tag=thrown_tnt] 会一起清掉。
 ★ 这个物品带 custom_data {tnt:true}，所以大厅每秒的 clear_tnt 也会收走，不会留在背包里。
+
+【排查"吃了没反应"】
+  1) 先确认已经【退出并重新进入存档】：改 advancement 只 /reload 不会扫描新 criteria。
+  2) 再跑 /function item:sulfur_tnt/test：
+     能出硫方怪  → 召唤没问题，问题在进度（custom_data 与 advancement 不一致，或没重进存档）
+     出不来      → 看聊天栏红字（未知实体 / 语法 / NBT）与 latest.log，按报错改 summon.mcfunction
+     出来了没炸  → equipment.body 没塞进去，看 data modify / item replace 哪条报错

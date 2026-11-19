@@ -20,8 +20,8 @@ execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s if block ~ ~-0.1 ~ #minec
 # 2. 贴地 + 已装填 → 记一次弹跳
 execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 run scoreboard players add @s bounce 1
 
-# 3. 第 1~3 次触地 → 上弹（0.45 格/刻，约 2 格高，够明显又不会飞太远）
-execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.45d
+# 3. 第 1~3 次触地 → 上弹（0.6 格/刻，约 3 格高：实测 0.45 略矮，抬高一档）
+execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 if score @s bounce matches 1..3 run data modify entity @s Motion[1] set value 0.6d
 
 # 4. 消费掉装填状态：同一段贴地期间不会再触发
 execute as @e[type=minecraft:tnt,tag=bounce_tnt] at @s unless block ~ ~-0.1 ~ #minecraft:air if score @s bounce_arm matches 1 run scoreboard players set @s bounce_arm 0

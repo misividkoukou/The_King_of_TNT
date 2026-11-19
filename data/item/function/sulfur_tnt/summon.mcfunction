@@ -1,12 +1,18 @@
-# 召唤一颗"装着 TNT 的硫方怪"（由 sulfur_tnt/throw 调用一次）
+# 召唤一颗"装着 TNT 的硫方怪"（由 sulfur_tnt/test 调用一次）
 #
-# equipment.body = 它吸收的方块；填 minecraft:tnt 就会自动推导成 Explosive 原型
-#   （Java 版原型由方块推导，不存在独立的 archetype NBT 字段）
-# fuse = 引信，-1 表示未点燃；这里直接给 90 tick（4.5 秒），
-#   留足时间观察弹跳，到点按 Explosive 原型的爆炸参数炸掉（炸完不分裂小方块）。
-# tags：thrown_tnt 让 states/reset 的 kill @e[tag=thrown_tnt] 能清掉；
-#       sulfur_test_tnt 只用于下面 attribute 定位最近这一颗。
-$summon minecraft:sulfur_cube ~ ~1.62 ~ {Tags:["thrown_tnt","sulfur_test_tnt"],fuse:90,equipment:{body:{id:"minecraft:tnt",count:1}},Motion:[$(mx)d,$(my)d,$(mz)d]}
+# ★ 先"裸召唤"，再单独塞方块：这样即使某条写入语句不被这个版本接受，
+#   实体也已经出现了（便于判断到底是"召唤失败"还是"内容没塞进去"）。
+# ★ Java 版硫方怪没有独立 archetype NBT，原型由 equipment.body 里的方块推导；
+#   填 minecraft:tnt 就走 Explosive 原型。
+# ★ fuse = 引信，-1 未点燃；这里给 90 tick（4.5 秒）直接点燃，留时间看弹跳。
+#   tags：thrown_tnt 让 states/reset 能清掉；sulfur_test_tnt 给下面几行定位。
+$summon minecraft:sulfur_cube ~ ~1.62 ~ {Tags:["thrown_tnt","sulfur_test_tnt"],fuse:90,Motion:[$(mx)d,$(my)d,$(mz)d]}
 
-# 弹性拉满（26.2 新增属性，0..1，默认 0）：用来测"落地恢复系数"到底能弹多高
+# 塞入 TNT：两条路径都试一次，谁被这个版本接受就用谁
+#   ① data modify：直接写装备槽（wiki 记载的存档位置就是 equipment.body）
+#   ② item replace：往 body 槽塞（armor.body）。实体没有该槽时只会报错，不影响召唤
+data modify entity @e[type=minecraft:sulfur_cube,tag=sulfur_test_tnt,limit=1,sort=nearest] equipment.body set value {id:"minecraft:tnt",count:1}
+item replace entity @e[type=minecraft:sulfur_cube,tag=sulfur_test_tnt,limit=1,sort=nearest] armor.body with minecraft:tnt
+
+# 弹性拉满（26.2 新增属性，0..1，默认 0，1.0 = 落地几乎不衰减）
 $attribute @e[type=minecraft:sulfur_cube,tag=sulfur_test_tnt,limit=1,sort=nearest] minecraft:bounciness base set 1.0
