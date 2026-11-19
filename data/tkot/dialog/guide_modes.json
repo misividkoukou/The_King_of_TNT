@@ -1,0 +1,101 @@
+{
+  "type": "minecraft:notice",
+  "title": {
+    "text": "模式说明",
+    "color": "aqua",
+    "bold": true
+  },
+  "external_title": {
+    "text": "模式说明"
+  },
+  "can_close_with_escape": true,
+  "body": [
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "模式在大厅的告示牌上点选，本局生效（下一局重新选）。",
+        "color": "gray"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【单人混战】",
+        "color": "yellow",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "各打各的，最后站着的人赢。"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【系统分组】",
+        "color": "gold",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "系统自动分红 / 黄 / 蓝 / 绿四队，队内不能互伤，最后一支有活人的队伍赢。"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【自选分组】",
+        "color": "aqua",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "自己站台选队，系统只做人数平衡；不足两队时自动回退成系统分组。"
+      }
+    }
+  ],
+  "action": {
+    "label": {
+      "text": "← 返回主菜单"
+    },
+    "width": 150,
+    "action": {
+      "type": "show_dialog",
+      "dialog": "tkot:guide_main"
+    }
+  }
+}

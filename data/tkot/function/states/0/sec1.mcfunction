@@ -26,6 +26,13 @@ execute as @a[team=!debug,scores={statu=0}] run tag @s remove job_bar_shown
 execute as @a[team=!debug,scores={statu=1},tag=!job_bar_shown] run function tkot:jobs/bar
 execute as @a[team=!debug,scores={statu=1},tag=!job_bar_shown] run tag @s add job_bar_shown
 
+# 0.7 大厅综合菜单（图鉴 + 战绩入口）
+#   ★ 每个玩家【每次回到大厅】只弹一次：用 lobby_menu_shown 标记；
+#     离开大厅（开场/战斗/结算）时由 ticks/sec1 统一摘掉标记，下一局回来会再弹。
+#   不打扰别人的原因：tellraw 只发给 @s（自己）。
+execute as @a[team=!debug,tag=!lobby_menu_shown] run function tkot:lobby/menu
+execute as @a[team=!debug,tag=!lobby_menu_shown] run tag @s add lobby_menu_shown
+
 # 1. 统计（身份判定已移到 states/0/tick1，那里每 tick 重算 statu，这里只负责数人头）
 scoreboard players set #total_prepare int 0
 scoreboard players set #total_player int 0

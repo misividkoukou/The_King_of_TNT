@@ -118,6 +118,34 @@
         },
         {
           "type": "minecraft:item",
+          "name": "minecraft:stick",
+          "weight": 5,
+          "modifier": [
+            {
+              "type": "minecraft:set_components",
+              "components": {
+                "minecraft:max_stack_size": 99,
+                "minecraft:use_cooldown": { "seconds": 1, "cooldown_group": "bounce_throw" },
+                "minecraft:custom_data": { "tnt": true, "type": "bounce" },
+                "minecraft:consumable": {
+                  "consume_seconds": 0,
+                  "animation": "none",
+                  "sound": "minecraft:intentionally_empty",
+                  "has_consume_particles": false
+                },
+                "minecraft:item_model": "minecraft:tnt",
+                "minecraft:item_name": { "text": "弹跳型tnt" },
+                "minecraft:enchantment_glint_override": true,
+                "minecraft:lore": [
+                  { "text": "落地会弹起来，弹三下才认命", "color": "aqua" },
+                  { "text": "一蹦一跳地来炸你", "color": "gray" }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "minecraft:beacon",
           "weight": 10,
           "modifier": [

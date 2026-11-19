@@ -8,3 +8,25 @@
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 单人混战 ]","color":"yellow","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 1"}}','','','']}}
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 系统分组 ]","color":"gold","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 2"}}','','','']}}
 /data merge block ~ ~ ~ {front_text:{has_glowing_text:true,messages:['{"text":"[ 自选分组 ]","color":"aqua","bold":true,"click_event":{"action":"run_command","command":"trigger mode_set set 3"}}','','','']}}
+
+图鉴（玩家向）
+ 大厅里点聊天栏的 [ 查看图鉴 ]；老玩家可自己输 /trigger guide_trigger set 1
+ 内容在 data/tkot/dialog/guide_*.json，改文案直接改 JSON，/reload 后生效
+ 只有大厅阶段（#steps=0）能打开，开战后自动失效
+
+生命值显示（管理员）
+ /function tkot:config/health_on    打开 Tab（list 槽位）生命值
+ /function tkot:config/health_off   关闭；/reload 后自动回到关闭
+
+大厅综合菜单
+ 每次回到大厅自动弹一条 tellraw：生涯击杀/死亡速览 + [ 图鉴 ] [ 战绩 ] 两个按钮
+ 文案在 data/tkot/function/lobby/menu.mcfunction；离开大厅的标记清理在 ticks/sec1
+
+K/D
+ 战绩面板里的 K/D 是一位小数比值（如 2.3），0 死亡时显示 "—"
+ 计算在 statistics/kd.mcfunction（kd=整数部分，kd_frac=小数部分），显示在 statistics/show.mcfunction
+
+硫方怪TNT（试验品，不参与发放）
+ /function item:sulfur_tnt/give    给自己 1 个，扔出去看弹跳效果（测 bounciness 属性）
+ /function item:sulfur_tnt/test    不吃道具直接投一颗（排查"吃了没反应"先跑这条）
+ 改完 advancement 必须退出重进存档，只 /reload 不会扫描新的 criteria

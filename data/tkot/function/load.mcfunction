@@ -13,6 +13,11 @@ tellraw @a [{text:"TKOT Minigame 为了Areocraft服务器开发，适配26.3+版
 scoreboard objectives remove death
 scoreboard objectives add death deathCount "死亡次数"
 
+# 单局击杀：playerKillCount 是原版准则，玩家击杀玩家时自动 +1。
+# 单局数据，所以同样 remove+add（每局结束由 states/reset 清零）。
+scoreboard objectives remove kill
+scoreboard objectives add kill playerKillCount "单局击杀"
+
 scoreboard objectives remove spawn_point 
 scoreboard objectives add spawn_point dummy "出生点"
 
@@ -36,8 +41,17 @@ scoreboard objectives add round dummy "玩家参与的局数"
 scoreboard objectives add player_round dummy "玩家参与次数"
 scoreboard objectives add player_win dummy "玩家胜利次数"
 scoreboard objectives add total.death dummy "总死亡次数"
+# 生涯总击杀：★ 只 add 不 remove —— 这里一旦 remove，/reload 会把所有人的生涯清空。
+scoreboard objectives add total.kill dummy "总击杀次数"
 scoreboard objectives remove rate
 scoreboard objectives add rate dummy "胜率"
+# KD 只是统计面板的临时值（和 rate 一样，显示完就清零），可以 remove+add
+#   kd      = K/D 的整数部分
+#   kd_frac = K/D 的小数部分（0..9，一位小数）
+scoreboard objectives remove kd
+scoreboard objectives add kd dummy "击杀死亡比"
+scoreboard objectives remove kd_frac
+scoreboard objectives add kd_frac dummy "击杀死亡比小数"
 
 ##GAME##
 
@@ -47,6 +61,15 @@ scoreboard objectives add int dummy
 
 scoreboard objectives remove sec
 scoreboard objectives add sec dummy "秒"
+
+# Tab（list 槽位）生命值显示，默认关闭
+# ★ remove+add：remove 会连带清掉这个 objective 的 display 槽位分配，
+#   所以 /reload 之后 Tab 自动回到"什么都不显示"，与"默认关闭"一致。
+#   真正生效靠管理员手动跑 config/health_on 与 config/health_off；
+#   #show_health 只是给管理员读取的开关状态。
+scoreboard objectives remove hp
+scoreboard objectives add hp health "生命"
+scoreboard players set #show_health int 0
 
 # 事件投票用的 trigger 计分板：给非 OP 玩家点聊天按钮用
 # （trigger 类型只能由玩家自己用 /trigger 改，权限交给 enable/disable 控制）
@@ -62,6 +85,16 @@ scoreboard objectives add job_trigger trigger "职业选择"
 
 scoreboard objectives remove lobby_trigger
 scoreboard objectives add lobby_trigger trigger "大厅选择"
+
+# 图鉴入口用的 trigger 计分板
+#   和 lobby_trigger 同一套做法：聊天栏/告示牌的 click_event 只能跑 trigger 才不要求 OP，
+#   真正的 /dialog show 由 guide/open 以服务端权限执行（见 guide/tick1 的门控）。
+scoreboard objectives remove guide_trigger
+scoreboard objectives add guide_trigger trigger "图鉴"
+
+# 大厅综合菜单的"已弹过"标记：重载后清一次，让所有人都能立刻再看到菜单
+#   （正常运行时的摘除由 ticks/sec1 在离开大厅时做）
+tag @a remove lobby_menu_shown
 
 # 事件临时属性（重力 / 血量上限 / 安全坠落距离）的倒计时，单位：tick
 # ★ 不要用 schedule 驱动还原：schedule 出来的函数没有实体上下文，@s 一定会失败；

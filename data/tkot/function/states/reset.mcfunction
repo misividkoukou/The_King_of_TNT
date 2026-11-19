@@ -56,6 +56,17 @@ scoreboard players reset @a vote
 # C2 玩家单局分数（deathCount 必须用 set，reset 会把这项删掉，scores={death=1..} 就永远不成立了）
 scoreboard players set @a death 0
 
+# 单局击杀 → 生涯累计：★ 顺序必须是「先累加、再清零」，而且在 set @a statu 0 之前。
+#   累加时用 operation，缺分数的人按 0 处理，不会报错。
+execute as @a run scoreboard players operation @s total.kill += @s kill
+scoreboard players set @a kill 0
+
+# 职业不带入下一局：这里用 reset 而不是 set 0。
+#   jobs/judge 只匹配 job=1..3，reset 后"没有 job 分数"的人自然什么都不发；
+#   而 set 0 会留下一条"已选职业 0"的假数据，语义上说不清。
+#   下一局的职业由大厅 job_trigger 重新选择。
+scoreboard players reset @a job
+
 # C3 身份与位置标记：所有人回大厅身份 0
 scoreboard players set @a statu 0
 tag @a remove in_arena
