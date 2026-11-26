@@ -1,0 +1,189 @@
+{
+  "type": "minecraft:notice",
+  "title": {
+    "text": "道具一览",
+    "color": "aqua",
+    "bold": true
+  },
+  "external_title": {
+    "text": "道具一览"
+  },
+  "can_close_with_escape": true,
+  "body": [
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【开局必给】",
+        "color": "gold",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "永恒之驽：弩，箭类道具都要用它射出去。"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "金色胡萝卜 ×5：回饱食度，可堆叠 99。"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【普通物资（开局抽一次 + 战斗中每 3 秒补给）】",
+        "color": "gold",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "抛射型tnt：吃下即向正前方抛出一颗 TNT，引信 3 秒。冷却 0.5 秒。"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【特殊物资（每 15 秒抽奖 / 特殊道具事件）】",
+        "color": "gold",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "瞬爆型tnt：碰到地面立刻爆炸。冷却 2 秒。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "多重射击tnt：一次抛出 3 颗，呈扇形散开。冷却 1 秒。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "弹跳tnt：落地会弹起，最多弹 3 次后才爆炸。冷却 1 秒。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "治疗池：放下一个治疗云，站在里面回血。冷却 5 秒。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "地雷：放在地上 1 秒后激活，踩上就炸。",
+        "color": "red"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "低当量爆炸箭 / 大当量爆炸箭：射中后爆炸，威力不同。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "传送箭：射出去落地后，把自己传到落点。",
+        "color": "light_purple"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "风弹：原版风弹，能把人吹飞。",
+        "color": "aqua"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "击退棒：击退 I，把人打飞。",
+        "color": "gold"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "末影珍珠：冷却降到 0.5 秒的版本。",
+        "color": "light_purple"
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": " "
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "【地图专属】",
+        "color": "gold",
+        "bold": true
+      }
+    },
+    {
+      "type": "minecraft:plain_message",
+      "width": 300,
+      "contents": {
+        "text": "腐朽文明 / 洞穴：额外发 5 支传送箭；洞穴再额外发 5 颗末影珍珠。"
+      }
+    }
+  ],
+  "action": {
+    "label": {
+      "text": "← 返回主菜单"
+    },
+    "width": 150,
+    "action": {
+      "type": "show_dialog",
+      "dialog": "tkot:guide_main"
+    }
+  }
+}
